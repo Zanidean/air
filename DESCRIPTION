@@ -1,6 +1,6 @@
 Package: air
 Type: Package
-Title: Tidy Dataframes from DCaRS
+Title: Pull DCaR data into Tidy Data Frames
 Date: 2017-08-04
 Version: 0.1.0
 Authors@R:  c(

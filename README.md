@@ -1,9 +1,9 @@
 Overview
 ---------
 
-air is a package for pulling tidy dataframes from the DCARS databases
+air is a package for pulling tidy data frames from the DCARS databases
 =======
-`enrolment()`: Pulls data from the LERS Live datacube
+`enrolment()`: Pulls data from the LERS Live 
 
 `applications()`: Pulls data form the ASI Live datacube
 
