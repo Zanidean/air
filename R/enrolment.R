@@ -36,6 +36,8 @@ enrolment <- function(measures, rows, institutions, username, password, print = 
   `Aboriginal Indicator` <- "[Aboriginal Indicator].[By Aboriginal Indicator].[Aboriginal Indicator]"
   `Country Of Citizenship` <- "[Country Of Citizenship].[Country Of Citizenship].[Country Of Citizenship]"
   Language <- "[Language].[Language].[Language]"
+  `Grade Completed Year` <- "[Grade Completed Year].[By Grade Completed Year].[Grade Completed Year]"
+  `Current Status` <- "[Current Status].[Current Status].[Current Status]"
 
   ###Registration
   `Year Of Study` <- "[Year Of Study].[Year Of Study].[Year Of Study]"
@@ -43,22 +45,31 @@ enrolment <- function(measures, rows, institutions, username, password, print = 
   `Level Of Study` <- "[Level Of Study].[Level Of Study].[Level Of Study]"
   `Current Status` <- "[Current Status].[Current Status].[Current Status]"
   `Registration Status` <- "[Registration Status].[By Registration Status].[Registration Status]"
+  `Level of Study` <- "[Level Of Study].[Level Of Study].[Level Of Study]"
+  `Calculated Learned Registration Status` <- "[Calculated Learner Registration Status].[Calculated Learner Registration Status].[Calculated Learner Registration Status]"
+  `Attainment` <- "[Attainment].[Attainment].[Attainment]"
 
   ###Provider
   Provider <- "[Provider].[Provider].[Provider]"
   `Provider Location` <- "[Provider Location].[By Provider and Location].[Provider Location]"
   `Provider Sector` <- "[Provider].[By Current Sector].[Current Sector]"
+  `Provider Service Area` <- "[Provider].[By Service Area].[Service Area]"
+
 
   ###Service Area
-  `Service Area: Country` <- "[Service Area].[By Country and Province].[Country]"
-  `Service Area: Province` <- "[Service Area].[By Country and Province].[Province]"
-
+  `Country` <- "[Service Area].[By Country and Province].[Country]"
+  `Province` <- "[Service Area].[By Country and Province].[Province]"
+  `Service Area` <- "[Service Area].[By Country and Province].[Service Area]"
+  `Postal Code` <- "[Service Area].[By Country and Province].[Postal Code]"
+  `Census Division` <- "[Census Division].[By Country and Province].[Census Division]"
   ###Program
   `Credential Type` <- "[Credential Type].[Credential Type].[Credential Type]"
   `Program Type` <- "[Program Type].[Program Type].[Program Type]"
   `Program Band` <- "[Program Band].[Program Band].[Program Band]"
-  `Program Code` <- "[Program and Specialization].[Program Name Code].[Program Name Code]"
-  `Program Specialization` <- "[Program and Specialization].[Specialization Name Code].[Specialization Name Code]"
+  `Program Name` <- "[Program and Specialization].[Program Name].[Program Name]"
+  `Program Name Code` <- "[Program and Specialization].[Program Code].[Program Code]"
+  `Program Specialization` <- "[Program and Specialization].[Specialization Name].[Specialization Name]"
+  `Program Specialization Code` <- "[Program and Specialization].[Specialization Code].[Specialization Code]"
   `Program Length` <- "[Program Length].[Program Length].[Program Length]"
   `CIP Level 4` <- "[CIP Level].[By Four Digits].[Four Digit Level]"
   `CIP Level 6` <- "[CIP Level].[By Six Digits].[Six Digit Level]"
@@ -123,16 +134,17 @@ enrolment <- function(measures, rows, institutions, username, password, print = 
   df <- executeMD(olapCnn, qry)
   if(is.null(df)){print("Whoops! Something went wrong...")}
   else{
-  df <- df %>%
-    as_tibble() %>%
-    mutate(measure = row.names(.)) %>%
-    gather(var, val, -measure) %>%
-    mutate(., var = gsub("St. Mary's", "StMary's", var)) %>%
-    drop_na(val) %>%
-    separate(., var, rows_list[0:length(rows)+1], sep = "\\.") %>%
-    unique(.) %>%
-    spread(measure, val)
-
+    df <- df %>%
+      as.data.frame()
+    df$measure <- row.names(df)
+    df <- reshape2::melt(df, id.vars = "measure") %>%
+      as_tibble() %>%
+      mutate(., variable = gsub("St. Mary's", "StMary's", variable)) %>%
+      group_by(measure, variable) %>%
+      summarise(value = sum(value, na.rm=T)) %>%
+      filter(value > 0) %>%
+      spread(measure, value) %>%
+      separate(., variable, rows_list[0:length(rows)+1], sep = "\\.")
   }
   return(df)
 }

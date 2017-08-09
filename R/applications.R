@@ -41,18 +41,20 @@ applications <- function(measures, rows, institutions, username, password, print
   Provider <- "[Provider].[Provider].[Provider]"
   `Provider Sector` <- "[Provider].[By Current Sector].[Current Sector]"
 
-  # `Service Area: Country Group` <- "[Service Area].[By Service Area].[Country Group]"
-  # `Service Area: Province` <- "[Service Area].[By Service Area].[Province]"
-  # `Service Area: Postal Code` <- "[Service Area].[By Service Area].[Postal Code]"
-  # `Service Area: Service Area` <- "[Service Area].[By Service Area].[Service Area]"
-  #
+  ###Service Area
+  `Country` <- "[Service Area].[By Service Area].[Country Group]"
+  `Province` <- "[Service Area].[By Service Area].[Province]"
+  `Service Area` <- "[Service Area].[By Service Area].[Service Area]"
+  `Postal Code` <- "[Service Area].[By Service Area].[Postal Code]"
 
   ###Program
   `Program Name` <- "[Program and Specialization].[Program Name].[Program Name]"
+  `Program Name Code` <- "[Program and Specialization].[Program Code].[Program Code]"
   `Credential Type` <- "[Credential Type].[Credential Type].[Credential Type]"
   `Program Type` <- "[Program Type].[Program Type].[Program Type]"
   `Program Band` <- "[Program Band].[Program Band].[Program Band]"
-  `Program Specialization` <- "[Program and Specialization].[Specialization Code And Name].[Specialization Code And Name]"
+  `Program Specialization` <- "[Program and Specialization].[Specialization Name].[Specialization Name]"
+  `Program Specialization Code` <- "[Program and Specialization].[Specialization Code].[Specialization Code]"
   `CIP Level 2` <- "[CIP Level].[By Two Digits].[Two Digit Level]"
 
   if(missing(username)){username = getOption("siams.username")}
@@ -84,7 +86,9 @@ applications <- function(measures, rows, institutions, username, password, print
   #Building the query itself
   ##I've opted to build it so measures and years are always present
   cube(qry) <- "[DCAR ASI Live Cube]"
+
   axis(qry, 1) <- c(measures2)
+
   axis(qry, 2) <- c("NONEMPTY([Academic Year].[Academic Year].[Academic Year].MEMBERS)")
 
   ##Building the axes
@@ -109,22 +113,26 @@ applications <- function(measures, rows, institutions, username, password, print
 
   #Print out MDX string used.
   mdx <- olapR::compose(qry)
-  if(print == TRUE){print(mdx)}
 
+
+
+  if(print == TRUE){print(mdx)}
   #Execute the query and clean the dataframe.
-  df <- executeMD(olapCnn, qry)
+  df <- executeMD(olapCnn, mdx)
+
   if(is.null(df)){print("Whoops! Something went wrong...")}
   else{
     df <- df %>%
+      as.data.frame()
+    df$measure <- row.names(df)
+    df <- reshape2::melt(df, id.vars = "measure") %>%
       as_tibble() %>%
-      mutate(measure = row.names(.)) %>%
-      gather(var, val, -measure) %>%
-      mutate(., var = gsub("St. Mary's", "StMary's", var)) %>%
-      drop_na(val) %>%
-      separate(., var, rows_list[0:length(rows)+1], sep = "\\.") %>%
-      unique(.) %>%
-      spread(measure, val)
-
+      mutate(., variable = gsub("St. Mary's", "StMary's", variable)) %>%
+      group_by(measure, variable) %>%
+      summarise(value = sum(value, na.rm=T)) %>%
+      filter(value > 0) %>%
+      spread(measure, value) %>%
+      separate(., variable, rows_list[0:length(rows)+1], sep = "\\.")
   }
   return(df)
 }
