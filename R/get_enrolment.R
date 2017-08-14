@@ -12,11 +12,13 @@
 #'                 institutions = c("MH", "MU", "UA"))
 #'@export get_enrolment
 
-get_enrolment <- function(measures, rows, institutions, username, password, print = F){
+get_enrolment <- function(measures, rows, institutions, username, password,
+                      print = F, remove.offshores = T, remove.continuingstudies = T){
   if(missing(username)){username = getOption("siams.username")}
   if(missing(password)){password = getOption("siams.password")}
   if(missing(print)){print <- FALSE}
-
+  if(missing(remove.offshores)){offshores <- TRUE}
+  if(missing(remove.continuingstudies)){continuingstudies <- TRUE}
   #Hardcoding the values for the arguments
   ##Measures
   `Unique Student Static` <- "[Measures].[Unique Student Static]"
@@ -116,13 +118,21 @@ get_enrolment <- function(measures, rows, institutions, username, password, prin
   if(is.na(providers[1])){providers <- NA}
   else {providers <- paste(providers, collapse = ", ")}
   providers <- ifelse(is.na(providers[1]), NA, paste0("{", providers, "}"))
+
+  if(remove.continuingstudies == T){
+    rm_cs <- c("EXCEPT([Registration Type].[Registration Type].[Registration Type].MEMBERS",
+               "[Registration Type].[Registration Type].[Registration Type].&[3])")
+  } else {rm_cs <- NA}
+
+  if(remove.offshores == T){
+    rm_os <- c("EXCEPT([Legal Status].[By Legal Status].[Legal Status].MEMBERS",
+               "[Legal Status].[By Legal Status].[Legal Status].&[5])")
+  } else {rm_os <- NA}
+
+
+
   slices <- c("([Registration Status].[By Registration Group].[Registration Group].&[1]",
-              providers,
-              "[Submission Status].[Submission Status].&[1]",
-              "EXCEPT([Registration Type].[Registration Type].[Registration Type].MEMBERS",
-              "[Registration Type].[Registration Type].[Registration Type].&[3])",
-              "EXCEPT([Legal Status].[By Legal Status].[Legal Status].MEMBERS",
-              "[Legal Status].[By Legal Status].[Legal Status].&[5]))") %>%
+              providers, rm_cs, rm_os, "[Submission Status].[Submission Status].&[1])") %>%
     na.omit()
   slicers(qry) <- slices
 
