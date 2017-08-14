@@ -47,6 +47,7 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   `Level Of Study` <- "[Level Of Study].[Level Of Study].[Level Of Study]"
   `Current Status` <- "[Current Status].[Current Status].[Current Status]"
   `Registration Status` <- "[Registration Status].[By Registration Status].[Registration Status]"
+  `Registration Type` <- "[Registration Type].[Registration Type].[Registration Type]"
   `Level of Study` <- "[Level Of Study].[Level Of Study].[Level Of Study]"
   `Calculated Learned Registration Status` <- "[Calculated Learner Registration Status].[Calculated Learner Registration Status].[Calculated Learner Registration Status]"
   `Attainment` <- "[Attainment].[Attainment].[Attainment]"
