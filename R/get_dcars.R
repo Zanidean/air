@@ -13,8 +13,8 @@
 #'@export get_dcars
 
 get_dcars <- function(app_measures, enrol_measures, rows, institutions){
-  app <- applications(app_measures, rows, institutions)
-  enrol <- enrolment(enrol_measures, rows, institutions)
+  app <- get_applications(app_measures, rows, institutions)
+  enrol <- get_enrolment(enrol_measures, rows, institutions)
   df <- dplyr::full_join(app, enrol, by = c("Academic Year", rows))
   return(df)
 }
