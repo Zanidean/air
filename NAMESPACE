@@ -3,3 +3,4 @@
 export(get_applications)
 export(get_dcars)
 export(get_enrolment)
+export(get_rate)
