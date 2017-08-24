@@ -19,6 +19,7 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   if(missing(print)){print <- FALSE}
   if(missing(remove.offshores)){offshores <- TRUE}
   if(missing(remove.continuingstudies)){continuingstudies <- TRUE}
+  if(missing(rows)){rows <- c()}
   #Hardcoding the values for the arguments
   ##Measures
   `Unique Student Static` <- "[Measures].[Unique Student Static]"

@@ -59,7 +59,7 @@ get_applications <- function(measures, rows, institutions, username, password, p
 
   if(missing(username)){username = getOption("siams.username")}
   if(missing(password)){password = getOption("siams.password")}
-
+  if(missing(rows)){rows <- c()}
   #source("R/Applications_Elements.R", local = T)
   #Setting connection to the cube.
   cnnstr <- paste0("Provider=MSOLAP;
