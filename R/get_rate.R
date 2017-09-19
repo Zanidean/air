@@ -3,19 +3,16 @@
 #'@param rate Either Conversion or Acceptance rate
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
-#'@examples
-#' df <- get_rate(c("Provider", "Gender"), "Converstion Rate)
 #'@export get_rate
-
-
+#'
 get_rate <- function(rows, rate){
+
   qualified <- get_applications("Unique Applicant Static", c(rows, "Qualified")) %>%
     filter(Qualified == "Qualified") %>%
     group_by_(.dots = c(lapply(c("Academic Year", rows), as.symbol))) %>%
     summarise(`Unique Applicant Static` = sum(`Unique Applicant Static`, na.rm = T)) %>%
     select(`Academic Year`, rows, `Unique Applicant Static`) %>%
     rename(Qualified = `Unique Applicant Static`)
-
 
   offered <- get_applications("Unique Applicant Static", c(rows, "Qualified", "Offered")) %>%
     filter(Qualified == "Qualified", Offered == "Offered") %>%
