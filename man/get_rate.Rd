@@ -4,12 +4,12 @@
 \alias{get_rate}
 \title{Pull data from LERS}
 \usage{
-get_rate(rows, rate)
+get_rate(rate, rows)
 }
 \arguments{
-\item{rows}{Select rows to cut data by}
-
 \item{rate}{Either Conversion or Acceptance rate}
+
+\item{rows}{Select rows to cut data by}
 
 \item{username}{Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".}
 

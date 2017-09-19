@@ -5,7 +5,7 @@
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
 #'@export get_rate
 #'
-get_rate <- function(rows, rate){
+get_rate <- function(rate, rows){
 
   qualified <- get_applications("Unique Applicant Static", c(rows, "Qualified")) %>%
     filter(Qualified == "Qualified") %>%
