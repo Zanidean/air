@@ -9,6 +9,9 @@ air is a package for pulling tidy data frames from DCARS
 
 `get_dcars()`: Uses both functions to create a dataframe of both enrolments and applicants
 
+`get_rate()`: Uses ASI cube to automatically calculate the conversion or acceptance rates
+
+
 Installation
 ------------
 ``` R
