@@ -4,7 +4,8 @@
 \alias{get_applications}
 \title{Pull data from ASI}
 \usage{
-get_applications(measures, rows, institutions, username, password, print = F)
+get_applications(measures, rows, institutions, username, password, print = F,
+  postalcodes, sa.mh = F)
 }
 \arguments{
 \item{measures}{Select possible measurements}
@@ -18,6 +19,8 @@ get_applications(measures, rows, institutions, username, password, print = F)
 \item{password}{Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password"}
 
 \item{print}{Optional: Prints the MDX string used to query the database}
+
+\item{postalcodes}{Optional: Filters by Postal Code}
 }
 \description{
 Pull data from ASI

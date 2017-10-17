@@ -2,6 +2,7 @@
 #'@param measures Select possible measurements
 #'@param rows Select rows to cut data by
 #'@param institutions Optional: Filters by Institution
+#'@param postalcodes Optional: Filters by Postal Code
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
 #'@param print Optional: Prints the MDX string used to query the database.
@@ -13,15 +14,20 @@
 #'@export get_enrolment
 
 get_enrolment <- function(measures, rows, institutions, username, password,
-                      print = F, remove.offshores = T, remove.continuingstudies = T){
+                      print = F, remove.offshores = T,
+                      remove.continuingstudies = T,
+                      postalcodes, sa.mh = F){
   if(missing(username)){username = getOption("siams.username")}
   if(missing(password)){password = getOption("siams.password")}
   if(missing(print)){print <- FALSE}
   if(missing(remove.offshores)){offshores <- TRUE}
   if(missing(remove.continuingstudies)){continuingstudies <- TRUE}
+  if(missing(sa.mh)){sa.mh <- FALSE}
   if(missing(rows)){rows <- c()}
   #Hardcoding the values for the arguments
   ##Measures
+
+
   `Unique Student Static` <- "[Measures].[Unique Student Static]"
   `Unique Student Current` <- "[Measures].[Unique Student Current]"
   FLE <- "[Measures].[FLE]"
@@ -108,18 +114,6 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   ##Building the axes
   for(i in seq_along(rows2)){axis(qry, i+2) <- paste0("NONEMPTY(", rows2[i], ".MEMBERS)")}
 
-  #Giving a filter option for provider
-  if(missing(institutions)){institutions <- NA}
-  providers <- c()
-  for(i in seq_along(institutions)){
-    if(!is.na(institutions[i])){
-      provider <- paste0("[Provider Location].[By Provider].[Provider].&[", institutions[i], "]")
-    } else {provider <- NA}
-    providers <- c(providers, provider)
-  }
-  if(is.na(providers[1])){providers <- NA}
-  else {providers <- paste(providers, collapse = ", ")}
-  providers <- ifelse(is.na(providers[1]), NA, paste0("{", providers, "}"))
 
   if(remove.continuingstudies == T){
     rm_cs <- c("EXCEPT([Registration Type].[Registration Type].[Registration Type].MEMBERS",
@@ -133,8 +127,39 @@ get_enrolment <- function(measures, rows, institutions, username, password,
 
 
 
+  #Giving a filter option for provider
+  if(missing(institutions)){institutions <- NA}
+  providers <- c()
+  for(i in seq_along(institutions)){
+    if(!is.na(institutions[i])){
+      provider <- paste0("[Provider Location].[By Provider].[Provider].&[", institutions[i], "]")
+    } else {provider <- NA}
+    providers <- c(providers, provider)
+  }
+  if(is.na(providers[1])){providers <- NA}
+  else {providers <- paste(providers, collapse = ", ")}
+  providers <- ifelse(is.na(providers[1]), NA, paste0("{", providers, "}"))
+
+
+  #Giving a filter option for postalcodes in service area
+  if(missing(postalcodes)){postalcodes <- NA}
+  if(sa.mh == T){postalcodes = c("T1A", "T1B", "T1C", "T1R", "T0J", "T0K")}
+
+  pcs <- c()
+  for(i in seq_along(postalcodes)){
+    if(!is.na(postalcodes[i])){
+      pc <- paste0("[Service Area].[By Country and Province].[Postal Code].&[CAME", postalcodes[i], "]")
+    } else {pc <- NA}
+    pcs <- c(pcs, pc)
+  }
+  if(is.na(pcs[1])){pcs <- NA}
+  else {pcs <- paste(pcs, collapse = ", ")}
+  pcs <- ifelse(is.na(pcs[1]), NA, paste0("{", pcs, "}"))
+
+
+
   slices <- c("([Registration Status].[By Registration Group].[Registration Group].&[1]",
-              providers, rm_cs, rm_os, "[Submission Status].[Submission Status].&[1])") %>%
+              providers, pcs, rm_cs, rm_os, "[Submission Status].[Submission Status].&[1])") %>%
     na.omit()
   slicers(qry) <- slices
 

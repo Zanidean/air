@@ -2,6 +2,7 @@
 #'@param measures Select possible measurements
 #'@param rows Select rows to cut data by
 #'@param institutions Optional: Filters by Institution
+#'@param postalcodes Optional: Filters by Postal Code
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username"
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password"
 #'@param print Optional: Prints the MDX string used to query the database
@@ -12,7 +13,10 @@
 #'                    institutions = c("MH", "MU", "UA"))
 #'@export get_applications
 
-get_applications <- function(measures, rows, institutions, username, password, print = F){
+get_applications <- function(measures, rows, institutions, username, password, print = F, postalcodes, sa.mh = F){
+
+  if(missing(sa.mh)){sa.mh <- FALSE}
+
   #Hardcoding the values for the arguments
   ##Measures
   `Application Record Count` <- "[Measures].[Application Record Count]"
@@ -106,7 +110,26 @@ get_applications <- function(measures, rows, institutions, username, password, p
   if(is.na(providers[1])){providers <- NA}
   else {providers <- paste(providers, collapse = ", ")}
   providers <- ifelse(is.na(providers[1]), NA, paste0("{", providers, "}, "))
-  slices <- paste0("(", providers, "[Submission Status].[Submission Status].&[1])")
+
+
+
+  #Giving a filter option for postalcodes in service area
+  if(missing(postalcodes)){postalcodes <- NA}
+  if(sa.mh == T){postalcodes = c("T1A", "T1B", "T1C", "T1R", "T0J", "T0K")}
+
+  pcs <- c()
+  for(i in seq_along(postalcodes)){
+    if(!is.na(postalcodes[i])){
+      pc <- paste0("[Service Area].[By Service Area].[Postal Code].&[ME", postalcodes[i], "]")
+    } else {pc <- NA}
+    pcs <- c(pcs, pc)
+  }
+  if(is.na(pcs[1])){pcs <- NA}
+  else {pcs <- paste(pcs, collapse = ", ")}
+  pcs <- ifelse(is.na(pcs[1]), NA, paste0("{", pcs, "},"))
+
+
+  slices <- paste0("(", providers, pcs, "[Submission Status].[Submission Status].&[1])")
   slices <- gsub("NA", "", slices)
 
   slicers(qry) <- slices

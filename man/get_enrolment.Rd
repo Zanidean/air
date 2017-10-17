@@ -4,7 +4,9 @@
 \alias{get_enrolment}
 \title{Pull data from LERS}
 \usage{
-get_enrolment(measures, rows, institutions, username, password, print = F)
+get_enrolment(measures, rows, institutions, username, password, print = F,
+  remove.offshores = T, remove.continuingstudies = T, postalcodes,
+  sa.mh = F)
 }
 \arguments{
 \item{measures}{Select possible measurements}
@@ -18,6 +20,8 @@ get_enrolment(measures, rows, institutions, username, password, print = F)
 \item{password}{Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".}
 
 \item{print}{Optional: Prints the MDX string used to query the database.}
+
+\item{postalcodes}{Optional: Filters by Postal Code}
 }
 \description{
 Pull data from LERS
