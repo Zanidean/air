@@ -2,7 +2,7 @@ Package: air
 Type: Package
 Title: Pull DCaR data into Tidy Data Frames
 Date: 2017-10-17
-Version: 0.1.3
+Version: 0.1.4
 Authors@R:  c(
     person("Alex", "Zanidean", ,"AZanidean@mhc.ab.ca", c("aut", "cre")),
     person("Evan", "Corten", ,"ecortens@myroyal.ca", "aut"),
