@@ -1,6 +1,8 @@
-#'Pull data from LERS
+#'Calculate a Simpson Diversity Index for LERS Data
 #'@param rows Select rows to cut data by
-#'@param type type of simpsondiversity index
+#'@param species Element of diversity
+#'@param inst Optional: Filters by Institution
+#'@param type Optional: Type of Simpson Diversity Index, Defaults to "Dominance"
 #'@export get_diversity
 #'
 get_diversity <- function(rows, species, inst, type){

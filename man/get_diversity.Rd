@@ -2,15 +2,19 @@
 % Please edit documentation in R/get_diversity.R
 \name{get_diversity}
 \alias{get_diversity}
-\title{Pull data from LERS}
+\title{Calculate a Simpson Diversity Index for LERS Data}
 \usage{
 get_diversity(rows, species, inst, type)
 }
 \arguments{
 \item{rows}{Select rows to cut data by}
 
-\item{type}{type of simpsondiversity index}
+\item{species}{Element of diversity}
+
+\item{inst}{Optional: Filters by Institution}
+
+\item{type}{Optional: Type of Simpson Diversity Index, Defaults to "Dominance"}
 }
 \description{
-Pull data from LERS
+Calculate a Simpson Diversity Index for LERS Data
 }
