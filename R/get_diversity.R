@@ -5,9 +5,10 @@
 #'@param type Optional: Type of Simpson Diversity Index, Defaults to "Dominance"
 #'@export get_diversity
 #'
-get_diversity <- function(rows, species, inst, type){
+get_diversity <- function(species, rows, inst, type){
   if(missing(type)){type = "dominance"}
   if(missing(inst)){inst = c()}
+  if(missing(rows)){rows = c()}
 
   sdi2 <- function (col, data, type)
   {
