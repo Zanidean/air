@@ -7,7 +7,7 @@
 #'
 get_diversity <- function(species, rows, inst, type){
   if(missing(type)){type = "dominance"}
-  if(missing(inst)){inst = c()}
+  #if(missing(inst)){inst = c()}
   if(missing(rows)){rows = c()}
 
   sdi2 <- function (col, data, type)
