@@ -2,19 +2,21 @@
 % Please edit documentation in R/get_rate.R
 \name{get_rate}
 \alias{get_rate}
-\title{Pull data from LERS}
+\title{Pull data from ASI}
 \usage{
-get_rate(rate, rows)
+get_rate(rate, rows, institutions)
 }
 \arguments{
 \item{rate}{Either Conversion or Acceptance rate}
 
-\item{rows}{Select rows to cut data by}
+\item{rows}{Select rows to cut data by. Defaults to "Provider"}
+
+\item{institutions}{Optional: Filters by Institution}
 
 \item{username}{Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".}
 
 \item{password}{Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".}
 }
 \description{
-Pull data from LERS
+Pull data from ASI
 }

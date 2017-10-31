@@ -1,11 +1,11 @@
 #'Calculate a Simpson Diversity Index for LERS Data
 #'@param rows Select rows to cut data by
 #'@param species Element of diversity
-#'@param inst Optional: Filters by Institution
+#'@param institutions Optional: Filters by Institution
 #'@param type Optional: Type of Simpson Diversity Index, Defaults to "Dominance"
 #'@export get_diversity
 #'
-get_diversity <- function(species, rows, inst, type){
+get_diversity <- function(species, rows, institutions, type){
   if(missing(type)){type = "dominance"}
   #if(missing(inst)){inst = c()}
   if(missing(rows)){rows = c()}
@@ -27,7 +27,7 @@ get_diversity <- function(species, rows, inst, type){
     return(DI)
   }
 
-  df <- get_enrolment("Unique Student Static", c(species, rows), institutions = inst) %>%
+  df <- get_enrolment("Unique Student Static", c(species, rows), institutions = institutions) %>%
     group_by_(.dots = c(lapply(c("Academic Year", rows), as.symbol))) %>%
     do(summarise(., Diversity = sdi2(col = "Unique Student Static",
                             data = ., type = type)))

@@ -4,14 +4,14 @@
 \alias{get_diversity}
 \title{Calculate a Simpson Diversity Index for LERS Data}
 \usage{
-get_diversity(species, rows, inst, type)
+get_diversity(species, rows, institutions, type)
 }
 \arguments{
 \item{species}{Element of diversity}
 
 \item{rows}{Select rows to cut data by}
 
-\item{inst}{Optional: Filters by Institution}
+\item{institutions}{Optional: Filters by Institution}
 
 \item{type}{Optional: Type of Simpson Diversity Index, Defaults to "Dominance"}
 }
