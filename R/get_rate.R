@@ -6,14 +6,18 @@
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
 #'@export get_rate
 #'
-get_rate <- function(rate, rows, institutions){
+get_rate <- function(rate, rows, institutions, sa.mh = F, postalcodes = c()){
 
 
   #if(missing(institutions)){institutions <- c()}
   if(missing(rows)){rows <- NULL}
+  if(missing(sa.mh)){sa.mh <- F}
+  if(missing(postalcodes)){postalcodes <- NA}
+
 
   qualified <- get_applications("Unique Applicant Static", c(rows, "Qualified"),
-                                institutions = institutions) %>%
+                                institutions = institutions,
+                                sa.mh = sa.mh, postalcodes = postalcodes) %>%
     filter(Qualified == "Qualified") %>%
     group_by_(.dots = c(lapply(c("Academic Year", rows), as.symbol))) %>%
     summarise(`Unique Applicant Static` = sum(`Unique Applicant Static`, na.rm = T)) %>%
@@ -21,7 +25,8 @@ get_rate <- function(rate, rows, institutions){
     rename(Qualified = `Unique Applicant Static`)
 
   offered <- get_applications("Unique Applicant Static", c(rows, "Qualified", "Offered"),
-                              institutions = institutions) %>%
+                              institutions = institutions,
+                              sa.mh = sa.mh, postalcodes = postalcodes) %>%
     filter(Qualified == "Qualified", Offered == "Offered") %>%
     group_by_(.dots = c(lapply(c("Academic Year", rows), as.symbol))) %>%
     summarise(`Unique Applicant Static` = sum(`Unique Applicant Static`, na.rm = T)) %>%
@@ -29,7 +34,8 @@ get_rate <- function(rate, rows, institutions){
     rename(Offered = `Unique Applicant Static`)
 
   attending <- get_applications("Unique Applicant Static", c(rows, "Qualified", "Offered", "Attending"),
-                                institutions = institutions) %>%
+                                institutions = institutions,
+                                sa.mh = sa.mh, postalcodes = postalcodes) %>%
     filter(Qualified == "Qualified", Offered == "Offered", Attending == "Attending") %>%
     group_by_(.dots = c(lapply(c("Academic Year", rows), as.symbol))) %>%
     summarise(`Unique Applicant Static` = sum(`Unique Applicant Static`, na.rm = T)) %>%
