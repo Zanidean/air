@@ -195,7 +195,7 @@ get_applications <- function(measures, rows, institutions, username, password, p
   #Execute the query and clean the dataframe.
   df <- executeMD(olapCnn, mdx)
 
-  if(is.null(df)){print("Whoops! Something went wrong...")}
+  if(is.null(df)){message("Whoops! Something went wrong...")}
   else{
     df <- df %>%
       as.data.frame()
