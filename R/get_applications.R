@@ -15,9 +15,42 @@
 #'@export get_applications
 
 get_applications <- function(measures, rows, institutions, username, password, print = F, postalcodes, censusdivisions, sa.mh = F){
+  #defining a new login function
+  getLoginDetails <- function(){
+    require(tcltk)
+    tt <- tktoplevel()
+    tkwm.title(tt, "Get login details")
+    Name <- tclVar("SIAMS Username")
+    Password <- tclVar("SIAMS Password")
+    entry.Name <- tkentry(tt,width="40", textvariable=Name)
+    entry.Password <- tkentry(tt, width="40", show="*",
+                              textvariable=Password)
+    tkgrid(tklabel(tt, text="Please enter your SIAMS login details."))
+    tkgrid(entry.Name)
+    tkgrid(entry.Password)
+
+    OnOK <- function()
+    {
+      tkdestroy(tt)
+    }
+    OK.but <-tkbutton(tt,text=" Login ", command=OnOK)
+    tkbind(entry.Password, "<Return>", OnOK)
+    tkgrid(OK.but)
+    tkfocus(tt)
+    tkwait.window(tt)
+
+    invisible(c(loginID=tclvalue(Name), password=tclvalue(Password)))
+  }
+  if(missing(username)){username <- getOption("siams.username")}
+  if(missing(password)){password <-  getOption("siams.password")}
+  if(is.null(username) | is.null(password)){
+    cred <- getLoginDetails()
+    username <- cred[["loginID"]]
+    password <- cred[["password"]]
+  }
 
   if(missing(sa.mh)){sa.mh <- FALSE}
-
+  if(missing(rows)){rows <- c()}
   #Hardcoding the values for the arguments
   ##Measures
   `Application Record Count` <- "[Measures].[Application Record Count]"
@@ -62,9 +95,6 @@ get_applications <- function(measures, rows, institutions, username, password, p
   `Program Specialization Code` <- "[Program and Specialization].[Specialization Code].[Specialization Code]"
   `CIP Level 2` <- "[CIP Level].[By Two Digits].[Two Digit Level]"
 
-  if(missing(username)){username = getOption("siams.username")}
-  if(missing(password)){password = getOption("siams.password")}
-  if(missing(rows)){rows <- c()}
   #source("R/Applications_Elements.R", local = T)
   #Setting connection to the cube.
   cnnstr <- paste0("Provider=MSOLAP;

@@ -18,8 +18,41 @@ get_enrolment <- function(measures, rows, institutions, username, password,
                       print = F, remove.offshores = T,
                       remove.continuingstudies = T,
                       postalcodes, censusdivisions, sa.mh = F){
-  if(missing(username)){username = getOption("siams.username")}
-  if(missing(password)){password = getOption("siams.password")}
+
+  #defining a new login function
+  getLoginDetails <- function(){
+    require(tcltk)
+    tt <- tktoplevel()
+    tkwm.title(tt, "Get login details")
+    Name <- tclVar("SIAMS Username")
+    Password <- tclVar("SIAMS Password")
+    entry.Name <- tkentry(tt,width="40", textvariable=Name)
+    entry.Password <- tkentry(tt, width="40", show="*",
+                              textvariable=Password)
+    tkgrid(tklabel(tt, text="Please enter your SIAMS login details."))
+    tkgrid(entry.Name)
+    tkgrid(entry.Password)
+
+    OnOK <- function()
+    {
+      tkdestroy(tt)
+    }
+    OK.but <-tkbutton(tt,text=" Login ", command=OnOK)
+    tkbind(entry.Password, "<Return>", OnOK)
+    tkgrid(OK.but)
+    tkfocus(tt)
+    tkwait.window(tt)
+
+    invisible(c(loginID=tclvalue(Name), password=tclvalue(Password)))
+  }
+  if(missing(username)){username <- getOption("siams.username")}
+  if(missing(password)){password <-  getOption("siams.password")}
+  if(is.null(username) | is.null(password)){
+  cred <- getLoginDetails()
+  username <- cred[["loginID"]]
+  password <- cred[["password"]]
+  }
+
   if(missing(print)){print <- FALSE}
   if(missing(remove.offshores)){offshores <- TRUE}
   if(missing(remove.continuingstudies)){continuingstudies <- TRUE}
