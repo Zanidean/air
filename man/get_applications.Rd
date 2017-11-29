@@ -5,7 +5,7 @@
 \title{Pull data from ASI}
 \usage{
 get_applications(measures, rows, institutions, username, password, print = F,
-  postalcodes, censusdivisions, sa.mh = F)
+  postalcodes, censusdivisions, cipcodes, sa.mh = F)
 }
 \arguments{
 \item{measures}{Select possible measurements}

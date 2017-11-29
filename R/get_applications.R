@@ -14,7 +14,10 @@
 #'                    institutions = c("MH", "MU", "UA"))
 #'@export get_applications
 
-get_applications <- function(measures, rows, institutions, username, password, print = F, postalcodes, censusdivisions, sa.mh = F){
+get_applications <- function(measures, rows,
+                             institutions, username, password, print = F,
+                             postalcodes, censusdivisions, cipcodes,
+                             sa.mh = F){
   #defining a new login function
   getLoginDetails <- function(){
     require(tcltk)
@@ -179,8 +182,38 @@ get_applications <- function(measures, rows, institutions, username, password, p
   cds <- ifelse(is.na(cds[1]), NA, paste0("{", cds, "},"))
 
 
+  #filter for cipcodes
+  if(missing(cipcodes)){cipcodes <- NA}
+  filtercips <- function(sub, place){
+    if(length(sub) > 0){
+      output <- c()
+      for(i in seq_along(sub)){
+        if(!is.na(sub[i])){
+          output_part <- paste0(place, sub[i], "]")
+        } else {output_part <- NA}
+        output <- c(output, output_part)
+      }
+      if(is.na(output[1])){output <- NA} else
+      {output <- paste(output, collapse = ", ")}
+      #output <- ifelse(is.na(output[1]), NA, paste0("{", output, "}"))
+    } else {output <- NA}
+    return(output)
+  }
+  cips_2 <- cipcodes[str_length(cipcodes) == 2]
+  cips_4 <- cipcodes[str_length(cipcodes) == 5]
+  cips_6 <- cipcodes[str_length(cipcodes) == 7]
+  cips2 <- filtercips(cips_2, "[CIP Level].[By Two Digits].[Two Digit Level].&[")
+  cips4 <- filtercips(cips_4, "[CIP Level].[By Two Digits].[Four Digit Level].&[")
+  cips6 <- filtercips(cips_6, "[CIP Level].[By Two Digits].[Six Digit Level].&[")
+  cips <- c(cips2, cips4, cips6)
+  cips <- cips[!is.na(cips)]
+  cips <- paste(cips, collapse = ", ")
+  cips <- ifelse(is.na(cips[1]), NA, paste0("{", cips, "},"))
+  cips <- ifelse(cips %in% c("{}", "{},"), NA, cips)
+  #print(cips)
+
   #applying filters
-  slices <- paste0("(", providers, pcs, cds,
+  slices <- paste0("(", providers, pcs, cds, cips,
                    "[Submission Status].[Submission Status].&[1])")
   slices <- gsub("NA", "", slices)
 
