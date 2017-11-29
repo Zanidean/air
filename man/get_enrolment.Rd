@@ -6,7 +6,7 @@
 \usage{
 get_enrolment(measures, rows, institutions, username, password, print = F,
   remove.offshores = T, remove.continuingstudies = T, postalcodes,
-  censusdivisions, sa.mh = F)
+  censusdivisions, cipcodes, sa.mh = F)
 }
 \arguments{
 \item{measures}{Select possible measurements}
@@ -24,6 +24,8 @@ get_enrolment(measures, rows, institutions, username, password, print = F,
 \item{postalcodes}{Optional: Filters by Postal Code}
 
 \item{censusdivisions}{Optional: Filters by Census Division}
+
+\item{cipcodes}{Optional: Filters by Cip Code. Must include}
 }
 \description{
 Pull data from LERS

@@ -4,6 +4,7 @@
 #'@param institutions Optional: Filters by Institution
 #'@param postalcodes Optional: Filters by Postal Code
 #'@param censusdivisions Optional: Filters by Census Division
+#'@param cipcodes Optional: Filters by Cip Code. Must include
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
 #'@param print Optional: Prints the MDX string used to query the database.
@@ -17,7 +18,8 @@
 get_enrolment <- function(measures, rows, institutions, username, password,
                       print = F, remove.offshores = T,
                       remove.continuingstudies = T,
-                      postalcodes, censusdivisions, sa.mh = F){
+                      postalcodes, censusdivisions, cipcodes,
+                      sa.mh = F){
 
   #defining a new login function
   getLoginDetails <- function(){
@@ -177,7 +179,6 @@ get_enrolment <- function(measures, rows, institutions, username, password,
 
   #Giving a filter option for postalcodes in service area
   if(missing(postalcodes)){postalcodes <- NA}
-  if(missing(censusdivisions)){censusdivisions <- NA}
   if(sa.mh == T){
     postalcodes = c("T1A", "T1B", "T1C", "T1R", "T0J", "T0K")
     censusdivisons <- c("1","2","4")
@@ -196,6 +197,7 @@ get_enrolment <- function(measures, rows, institutions, username, password,
 
 
   #Giving a filter option for postalcodes in service area
+  if(missing(censusdivisions)){censusdivisions <- NA}
   cds <- c()
   for(i in seq_along(censusdivisions)){
     if(!is.na(censusdivisions[i])){
@@ -207,14 +209,44 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   }
   if(is.na(cds[1])){cds <- NA}
   else {cds <- paste(cds, collapse = ", ")}
-  cds <- ifelse(is.na(cds[1]), NA, paste0("{", cds, "},"))
+  cds <- ifelse(is.na(cds[1]), NA, paste0("{", cds, "}"))
 
 
+  #filter for cipcodes
+  if(missing(cipcodes)){cipcodes <- NA}
+  filtercips <- function(sub, place){
+    if(length(sub) > 0){
+      output <- c()
+      for(i in seq_along(sub)){
+        if(!is.na(sub[i])){
+          output_part <- paste0(place, sub[i], "]")
+        } else {output_part <- NA}
+        output <- c(output, output_part)
+      }
+      if(is.na(output[1])){output <- NA} else
+      {output <- paste(output, collapse = ", ")}
+      #output <- ifelse(is.na(output[1]), NA, paste0("{", output, "}"))
+    } else {output <- NA}
+    return(output)
+  }
+  cips_2 <- cipcodes[str_length(cipcodes) == 2]
+  cips_4 <- cipcodes[str_length(cipcodes) == 5]
+  cips_6 <- cipcodes[str_length(cipcodes) == 7]
+  cips2 <- filtercips(cips_2, "[CIP Level].[By Two Digits].[Two Digit Level].&[")
+  cips4 <- filtercips(cips_4, "[CIP Level].[By Two Digits].[Four Digit Level].&[")
+  cips6 <- filtercips(cips_6, "[CIP Level].[By Two Digits].[Six Digit Level].&[")
 
+  cips <- c(cips2, cips4, cips6)
+  cips <- cips[!is.na(cips)]
+  cips <- paste(cips, collapse = ", ")
+  cips <- ifelse(is.na(cips[1]), NA, paste0("{", cips, "}"))
+  cips <- ifelse(cips == "{}", NA, cips)
+  #print(cips)
 
   slices <- c("([Registration Status].[By Registration Group].[Registration Group].&[1]",
-              providers, pcs, cds, rm_cs, rm_os, "[Submission Status].[Submission Status].&[1])") %>%
+              providers, pcs, cds, cips, rm_cs, rm_os, "[Submission Status].[Submission Status].&[1])") %>%
     na.omit()
+  #print(slices)
   slicers(qry) <- slices
 
   #Print out MDX string used.
