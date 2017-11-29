@@ -4,7 +4,7 @@
 #'@param institutions Optional: Filters by Institution
 #'@param postalcodes Optional: Filters by Postal Code
 #'@param censusdivisions Optional: Filters by Census Division
-#'@param cipcodes Optional: Filters by Cip Code. Must include
+#'@param cipcodes Optional: Filters by Cip Code of any length, can used mixed vector.
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
 #'@param print Optional: Prints the MDX string used to query the database.
@@ -16,10 +16,10 @@
 #'@export get_enrolment
 
 get_enrolment <- function(measures, rows, institutions, username, password,
-                      print = F, remove.offshores = T,
-                      remove.continuingstudies = T,
-                      postalcodes, censusdivisions, cipcodes,
-                      sa.mh = F){
+                           print = F, remove.offshores = T,
+                           remove.continuingstudies = T,
+                           postalcodes, censusdivisions, cipcodes,
+                           sa.mh = F){
 
   #defining a new login function
   getLoginDetails <- function(){
@@ -50,15 +50,20 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   if(missing(username)){username <- getOption("siams.username")}
   if(missing(password)){password <-  getOption("siams.password")}
   if(is.null(username) | is.null(password)){
-  cred <- getLoginDetails()
-  username <- cred[["loginID"]]
-  password <- cred[["password"]]
+    cred <- getLoginDetails()
+    username <- cred[["loginID"]]
+    password <- cred[["password"]]
   }
 
   if(missing(print)){print <- FALSE}
   if(missing(remove.offshores)){offshores <- TRUE}
   if(missing(remove.continuingstudies)){continuingstudies <- TRUE}
   if(missing(sa.mh)){sa.mh <- FALSE}
+  if(sa.mh == T){
+    postalcodes = c("T1A", "T1B", "T1C", "T1R", "T0J", "T0K")
+    censusdivisons <- c("1","2","4")
+  }
+
   if(missing(rows)){rows <- c()}
   #Hardcoding the values for the arguments
   ##Measures
@@ -162,55 +167,29 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   } else {rm_os <- NA}
 
 
+  fltr <- function(arg, place){
+    arg <- na.omit(arg)
+    if(missing(arg)){arg <- NA}
+    if(!is.na(arg[1])){
+      output <- paste(place,
+                      arg, "]",
+                      sep = "", collapse = ", ") %>%
+        paste0("{", ., "}")
+    } else {output <- NA}
+    return(output)
+  }
 
   #Giving a filter option for provider
   if(missing(institutions)){institutions <- NA}
-  providers <- c()
-  for(i in seq_along(institutions)){
-    if(!is.na(institutions[i])){
-      provider <- paste0("[Provider Location].[By Provider].[Provider].&[", institutions[i], "]")
-    } else {provider <- NA}
-    providers <- c(providers, provider)
-  }
-  if(is.na(providers[1])){providers <- NA}
-  else {providers <- paste(providers, collapse = ", ")}
-  providers <- ifelse(is.na(providers[1]), NA, paste0("{", providers, "}"))
-
+  providers <- fltr(institutions, "[Provider Location].[By Provider].[Provider].&[")
 
   #Giving a filter option for postalcodes in service area
   if(missing(postalcodes)){postalcodes <- NA}
-  if(sa.mh == T){
-    postalcodes = c("T1A", "T1B", "T1C", "T1R", "T0J", "T0K")
-    censusdivisons <- c("1","2","4")
-    }
-
-  pcs <- c()
-  for(i in seq_along(postalcodes)){
-    if(!is.na(postalcodes[i])){
-      pc <- paste0("[Service Area].[By Country and Province].[Postal Code].&[CAME", postalcodes[i], "]")
-    } else {pc <- NA}
-    pcs <- c(pcs, pc)
-  }
-  if(is.na(pcs[1])){pcs <- NA}
-  else {pcs <- paste(pcs, collapse = ", ")}
-  pcs <- ifelse(is.na(pcs[1]), NA, paste0("{", pcs, "}"))
-
+  pcs <- fltr(postalcodes, "[Service Area].[By Country and Province].[Postal Code].&[CAME")
 
   #Giving a filter option for postalcodes in service area
   if(missing(censusdivisions)){censusdivisions <- NA}
-  cds <- c()
-  for(i in seq_along(censusdivisions)){
-    if(!is.na(censusdivisions[i])){
-      cd <- paste0("[Census Division].[By Country and Province].[Census Division].&[0",
-                   censusdivisions[i], "]")
-      print(cd)
-    } else {cd <- NA}
-    cds <- c(cds, cd)
-  }
-  if(is.na(cds[1])){cds <- NA}
-  else {cds <- paste(cds, collapse = ", ")}
-  cds <- ifelse(is.na(cds[1]), NA, paste0("{", cds, "}"))
-
+  cds <- fltr(censusdivisions, "[Census Division].[By Country and Province].[Census Division].&[0")
 
   #filter for cipcodes
   if(missing(cipcodes)){cipcodes <- NA}

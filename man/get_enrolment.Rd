@@ -25,7 +25,7 @@ get_enrolment(measures, rows, institutions, username, password, print = F,
 
 \item{censusdivisions}{Optional: Filters by Census Division}
 
-\item{cipcodes}{Optional: Filters by Cip Code. Must include}
+\item{cipcodes}{Optional: Filters by Cip Code of any length, can used mixed vector.}
 }
 \description{
 Pull data from LERS

@@ -22,6 +22,8 @@ get_applications(measures, rows, institutions, username, password, print = F,
 
 \item{postalcodes}{Optional: Filters by Postal Code}
 
+\item{cipcodes}{Optional: Filters by Cip Code of any length, can used mixed vector.}
+
 \item{censusdivisons}{Optional: Filters by Census Division}
 }
 \description{
