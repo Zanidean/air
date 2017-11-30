@@ -13,7 +13,7 @@ get_enrolment(measures, rows, institutions, username, password, print = F,
 
 \item{rows}{Select rows to cut data by}
 
-\item{institutions}{Optional: Filters by Institution}
+\item{institutions}{Optional: Filters by Institution. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.}
 
 \item{username}{Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".}
 
@@ -21,11 +21,11 @@ get_enrolment(measures, rows, institutions, username, password, print = F,
 
 \item{print}{Optional: Prints the MDX string used to query the database.}
 
-\item{postalcodes}{Optional: Filters by Postal Code}
+\item{postalcodes}{Optional: Filters by Postal Code. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.}
 
-\item{censusdivisions}{Optional: Filters by Census Division}
+\item{censusdivisions}{Optional: Filters by Census Division. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.}
 
-\item{cipcodes}{Optional: Filters by Cip Code of any length, can used mixed vector.}
+\item{cipcodes}{Optional: Filters by Cip Code of any length, can used mixed vector with any length cip codes together.}
 }
 \description{
 Pull data from LERS
@@ -33,5 +33,7 @@ Pull data from LERS
 \examples{
 df <- get_enrolment(measures = c("Unique Student Static", "FLE"),
                 rows = c("Provider", "Gender"),
-                institutions = c("MH", "MU", "UA"))
+                institutions = c("MH", "MU", "UA"),
+                postalcodes = c("exclude", "T1C"),
+                censusdivision = c("exclude", "1"))
 }

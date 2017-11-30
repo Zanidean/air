@@ -1,10 +1,10 @@
 #'Pull data from ASI
 #'@param measures Select possible measurements
 #'@param rows Select rows to cut data by
-#'@param institutions Optional: Filters by Institution
-#'@param postalcodes Optional: Filters by Postal Code
-#'@param censusdivisons Optional: Filters by Census Division
-#'@param cipcodes Optional: Filters by Cip Code of any length, can used mixed vector.
+#'@param institutions Optional: Filters by Institution. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
+#'@param postalcodes Optional: Filters by Postal Code. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
+#'@param censusdivisions Optional: Filters by Census Division. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
+#'@param cipcodes Optional: Filters by Cip Code of any length, can used mixed vector with any length cip codes together.
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username"
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password"
 #'@param print Optional: Prints the MDX string used to query the database
@@ -12,7 +12,10 @@
 #'@examples
 #' df <- get_applications(measures = c("Unique Applicant Static", "Application Record Count"),
 #'                    rows = c("Provider", "Gender"),
-#'                    institutions = c("MH", "MU", "UA"))
+#'                    institutions = c("MH", "MU", "UA"),
+#'                 institutions = c("MH", "MU", "UA"),
+#'                 postalcodes = c("exclude", "T1C"),
+#'                 censusdivision = c("exclude", "1"))
 #'@export get_applications
 
 get_applications <- function(measures, rows,
