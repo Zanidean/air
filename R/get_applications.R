@@ -53,11 +53,20 @@ get_applications <- function(measures, rows,
     username <- cred[["loginID"]]
     password <- cred[["password"]]
   }
-
+  if(missing(institutions)){institutions <- NA}
+  if(missing(postalcodes)){postalcodes <- NA}
+  if(missing(censusdivisions)){censusdivisions <- NA}
+  if(missing(cipcodes)){cipcodes <- NA}
   if(missing(sa.mh)){sa.mh <- FALSE}
+
+  pcs_t <- grepl("exclude", postalcodes) %>% any()
+  cds_t <- grepl("exclude", censusdivisions) %>% any()
+  cips_t <- grepl("exclude", cipcodes) %>% any()
+  providers_t <- grepl("exclude", institutions) %>% any()
+
   if(sa.mh == T){
     postalcodes <-  c("T1A", "T1B", "T1C", "T1R", "T0J", "T0K")
-    censusdivisons <- c("1","2","4")
+    censusdivisions <- c("1","2","4")
   }
 
   if(missing(rows)){rows <- c()}
@@ -141,6 +150,7 @@ get_applications <- function(measures, rows,
 
   fltr <- function(arg, place){
     arg <- na.omit(arg)
+    arg <- arg[arg != "exclude"]
     if(missing(arg)){arg <- NA}
     if(!is.na(arg[1])){
       output <- paste(place, arg, "]",
@@ -151,7 +161,7 @@ get_applications <- function(measures, rows,
   }
 
   #Giving a filter option for provider
-  if(missing(institutions)){institutions <- NA}
+
   providers <- fltr(institutions, "[Provider].[By Current Sector].[Provider].&[")
 
   # providers <- c()
@@ -166,7 +176,7 @@ get_applications <- function(measures, rows,
   # providers <- ifelse(is.na(providers[1]), NA, paste0("{", providers, "}, "))
 
   #Giving a filter option for postalcodes
-  if(missing(postalcodes)){postalcodes <- NA}
+
   pcs <- fltr(postalcodes, "[Service Area].[By Service Area].[Postal Code].&[ME")
 
   # pcs <- c()
@@ -183,7 +193,7 @@ get_applications <- function(measures, rows,
 
 
   #Giving a filter option for census division in service area
-  if(missing(censusdivisions)){censusdivisions <- NA}
+
   cds <- fltr(censusdivisions, "[Census Division].[By Census Division].[Census Division].&[0")
 
   # cds <- c()
@@ -201,7 +211,7 @@ get_applications <- function(measures, rows,
 
 
   #filter for cipcodes
-  if(missing(cipcodes)){cipcodes <- NA}
+
   filtercips <- function(sub, place){
     if(length(sub) > 0){
       output <- c()
@@ -229,6 +239,20 @@ get_applications <- function(measures, rows,
   cips <- ifelse(is.na(cips[1]), NA, paste0("{", cips, "},"))
   cips <- ifelse(cips %in% c("{}", "{},"), NA, cips)
   #print(cips)
+
+
+  excluder <- function(input, test, place){
+    if(test == T){
+      output <- gsub("},", "}", input)
+      output <- paste0("EXCEPT(", place, ".MEMBERS, ", output, "), ")
+    } else (output <- input)
+    return(output)
+  }
+
+
+  pcs <- excluder(pcs, pcs_t, "[Service Area].[By Service Area].[Postal Code]")
+  cds <- excluder(cds, cds_t, "[Census Division].[By Census Division].[Census Division]")
+
 
   #applying filters
   slices <- paste0("(", providers, pcs, cds, cips,

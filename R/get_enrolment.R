@@ -18,7 +18,9 @@
 get_enrolment <- function(measures, rows, institutions, username, password,
                            print = F, remove.offshores = T,
                            remove.continuingstudies = T,
-                           postalcodes, censusdivisions, cipcodes,
+                           postalcodes,
+                           censusdivisions,
+                           cipcodes,
                            sa.mh = F){
 
   #defining a new login function
@@ -58,10 +60,20 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   if(missing(print)){print <- FALSE}
   if(missing(remove.offshores)){offshores <- TRUE}
   if(missing(remove.continuingstudies)){continuingstudies <- TRUE}
+  if(missing(institutions)){institutions <- NA}
+  if(missing(postalcodes)){postalcodes <- NA}
+  if(missing(censusdivisions)){censusdivisions <- NA}
+  if(missing(cipcodes)){cipcodes <- NA}
   if(missing(sa.mh)){sa.mh <- FALSE}
+
+  pcs_t <- grepl("exclude", postalcodes) %>% any()
+  cds_t <- grepl("exclude", censusdivisions) %>% any()
+  cips_t <- grepl("exclude", cipcodes) %>% any()
+  providers_t <- grepl("exclude", institutions) %>% any()
+
   if(sa.mh == T){
     postalcodes = c("T1A", "T1B", "T1C", "T1R", "T0J", "T0K")
-    censusdivisons <- c("1","2","4")
+    censusdivisions = c("1","2","4")
   }
 
   if(missing(rows)){rows <- c()}
@@ -166,9 +178,9 @@ get_enrolment <- function(measures, rows, institutions, username, password,
                "[Legal Status].[By Legal Status].[Legal Status].&[5])")
   } else {rm_os <- NA}
 
-
   fltr <- function(arg, place){
     arg <- na.omit(arg)
+    arg <- arg[arg != "exclude"]
     if(missing(arg)){arg <- NA}
     if(!is.na(arg[1])){
       output <- paste(place,
@@ -180,19 +192,14 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   }
 
   #Giving a filter option for provider
-  if(missing(institutions)){institutions <- NA}
   providers <- fltr(institutions, "[Provider Location].[By Provider].[Provider].&[")
-
   #Giving a filter option for postalcodes in service area
-  if(missing(postalcodes)){postalcodes <- NA}
   pcs <- fltr(postalcodes, "[Service Area].[By Country and Province].[Postal Code].&[CAME")
-
   #Giving a filter option for postalcodes in service area
-  if(missing(censusdivisions)){censusdivisions <- NA}
   cds <- fltr(censusdivisions, "[Census Division].[By Country and Province].[Census Division].&[0")
 
   #filter for cipcodes
-  if(missing(cipcodes)){cipcodes <- NA}
+
   filtercips <- function(sub, place){
     if(length(sub) > 0){
       output <- c()
@@ -221,6 +228,22 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   cips <- ifelse(is.na(cips[1]), NA, paste0("{", cips, "}"))
   cips <- ifelse(cips == "{}", NA, cips)
   #print(cips)
+
+  excluder <- function(input, test, place){
+    if(test == T){
+      output <- gsub("},", "}", input)
+      output <- paste0("EXCEPT(", place, ".MEMBERS, ", output, ")")
+    } else (output <- input)
+    return(output)
+  }
+
+  pcs <- excluder(pcs, pcs_t,
+                  "[Service Area].[By Country and Province].[Postal Code]")
+  cds <- excluder(cds, cds_t,
+                  "[Census Division].[By Country and Province].[Census Division]")
+
+  providers <- excluder(providers, providers_t,
+                        "[Provider Location].[By Provider].[Provider]")
 
   slices <- c("([Registration Status].[By Registration Group].[Registration Group].&[1]",
               providers, pcs, cds, cips, rm_cs, rm_os, "[Submission Status].[Submission Status].&[1])") %>%

@@ -4,7 +4,8 @@
 \alias{get_rate}
 \title{Pull data from ASI}
 \usage{
-get_rate(rate, rows, institutions, sa.mh = F, postalcodes = c())
+get_rate(rate, rows, institutions, sa.mh = F, postalcodes = c(),
+  censusdivisions = c())
 }
 \arguments{
 \item{rate}{Either Conversion or Acceptance rate}
