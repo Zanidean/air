@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_rate.R
 \name{get_rate}
 \alias{get_rate}
-\title{Pull data from ASI}
+\title{Calculate either a Conversion or Acceptance rate using ASI data.}
 \usage{
 get_rate(rate, rows, institutions, sa.mh = F, postalcodes = c(),
   censusdivisions = c())
@@ -19,5 +19,5 @@ get_rate(rate, rows, institutions, sa.mh = F, postalcodes = c(),
 \item{password}{Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".}
 }
 \description{
-Pull data from ASI
+Calculate either a Conversion or Acceptance rate using ASI data.
 }

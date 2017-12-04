@@ -116,6 +116,8 @@ get_applications <- function(measures, rows,
   `Program Specialization` <- "[Program and Specialization].[Specialization Name].[Specialization Name]"
   `Program Specialization Code` <- "[Program and Specialization].[Specialization Code].[Specialization Code]"
   `CIP Level 2` <- "[CIP Level].[By Two Digits].[Two Digit Level]"
+  `CIP Level 4` <- "[CIP Level].[By Two Digits].[Four Digit Level]"
+  `CIP Level 6` <- "[CIP Level].[By Two Digits].[Six Digit Level]"
 
   #source("R/Applications_Elements.R", local = T)
   #Setting connection to the cube.

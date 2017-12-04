@@ -1,4 +1,4 @@
-#'Pull data from ASI
+#'Calculate either a Conversion or Acceptance rate using ASI data.
 #'@param rows Select rows to cut data by. Defaults to "Provider"
 #'@param rate Either Conversion or Acceptance rate
 #'@param institutions Optional: Filters by Institution
@@ -6,7 +6,9 @@
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
 #'@export get_rate
 #'
-get_rate <- function(rate, rows, institutions, sa.mh = F, postalcodes = c(), censusdivisions = c()){
+get_rate <- function(rate, rows, institutions,
+                     sa.mh = F, postalcodes = c(),
+                     censusdivisions = c()){
 
 
   #if(missing(institutions)){institutions <- c()}
