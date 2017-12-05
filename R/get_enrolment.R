@@ -28,6 +28,7 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   #defining a new login function
   getLoginDetails <- function(){
     require(tcltk)
+    message("Please use pop-up to authorize.")
     tt <- tktoplevel()
     tkwm.title(tt, "Get login details")
     Name <- tclVar("SIAMS Username")

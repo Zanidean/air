@@ -25,6 +25,7 @@ get_applications <- function(measures, rows,
   #defining a new login function
   getLoginDetails <- function(){
     require(tcltk)
+    message("Please use pop-up to authorize.")
     tt <- tktoplevel()
     tkwm.title(tt, "Get login details")
     Name <- tclVar("SIAMS Username")
