@@ -1,12 +1,12 @@
 Package: air
 Type: Package
 Title: Pull DCaR data into Tidy Data Frames
-Date: 2017-11-30
+Date: 2017-12-6
 Version: 0.1.75
 Authors@R:  c(
     person("Alex", "Zanidean", ,"AZanidean@mhc.ab.ca", c("aut", "cre")),
     person("Evan", "Corten", ,"ecortens@myroyal.ca", "ctb"),
-    person("Jared", "Prins",  ,"jared.prins@ualberta.ca","aut")
+    person("Jared", "Prins",  ,"jared.prins@ualberta.ca","ctb")
     )
 LazyData: TRUE
 License: GPL-3 | file LICENSE
