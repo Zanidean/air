@@ -258,7 +258,7 @@ get_applications <- function(measures, rows,
 
   pcs <- excluder(pcs, pcs_t, "[Service Area].[By Service Area].[Postal Code]")
   cds <- excluder(cds, cds_t, "[Census Division].[By Census Division].[Census Division]")
-
+  providers <- excluder(providers, providers_t, "[Provider].[By Current Sector].[Provider]")
 
   #applying filters
   slices <- paste0("(", providers, pcs, cds, cips,
