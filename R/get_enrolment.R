@@ -29,45 +29,64 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   getLoginDetails <- function(){
     require(tcltk)
     message("Please use pop-up to authorize.")
-    tt <- tktoplevel()
-    tkwm.title(tt, "Get login details")
-    Name <- tclVar("SIAMS Username")
-    Password <- tclVar("SIAMS Password")
-    entry.Name <- tkentry(tt,width="40", textvariable=Name)
-    entry.Password <- tkentry(tt, width="40", show="*",
-                              textvariable=Password)
-    tkgrid(tklabel(tt, text="Please enter your SIAMS login details."))
-    tkgrid(entry.Name)
-    tkgrid(entry.Password)
+    tt <- tcltk::tktoplevel()
+    tcltk::tkwm.title(tt, "Get login details")
+    Name <- tcltk::tclVar("SIAMS Username")
+    Password <- tcltk::tclVar("SIAMS Password")
+    entry.Name <- tcltk::tkentry(tt, width = "40", textvariable = Name)
+    entry.Password <- tcltk::tkentry(tt, width = "40", show = "*",
+                              textvariable = Password)
+    tcltk::tkgrid(tcltk::tklabel(tt, text = "Please enter your SIAMS login details."))
+    tcltk::tkgrid(entry.Name)
+    tcltk::tkgrid(entry.Password)
 
-    OnOK <- function()
-    {
-      tkdestroy(tt)
+    OnOK <- function(){
+      tcltk::tkdestroy(tt)
     }
-    OK.but <-tkbutton(tt,text=" Login ", command=OnOK)
-    tkbind(entry.Password, "<Return>", OnOK)
-    tkgrid(OK.but)
-    tkfocus(tt)
-    tkwait.window(tt)
+    OK.but <-tcltk::tkbutton(tt, text = " Login ", command = OnOK)
+    tcltk::tkbind(entry.Password, "<Return>", OnOK)
+    tcltk:: tkgrid(OK.but)
+    tcltk::tkfocus(tt)
+    tcltk::tkwait.window(tt)
 
-    invisible(c(loginID=tclvalue(Name), password=tclvalue(Password)))
+    invisible(c(loginID = tcltk::tclvalue(Name), password = tcltk::tclvalue(Password)))
   }
-  if(missing(username)){username <- getOption("siams.username")}
-  if(missing(password)){password <-  getOption("siams.password")}
-  if(is.null(username) | is.null(password)){
+  if (missing(username)){
+    username <- getOption("siams.username")
+    }
+  if (missing(password)){
+    password <-  getOption("siams.password")
+    }
+  if (is.null(username) | is.null(password)){
     cred <- getLoginDetails()
     username <- cred[["loginID"]]
     password <- cred[["password"]]
   }
 
-  if(missing(print)){print <- FALSE}
-  if(missing(remove.offshores)){offshores <- TRUE}
-  if(missing(remove.continuingstudies)){continuingstudies <- TRUE}
-  if(missing(institutions)){institutions <- NA}
-  if(missing(postalcodes)){postalcodes <- NA}
-  if(missing(censusdivisions)){censusdivisions <- NA}
-  if(missing(cipcodes)){cipcodes <- NA}
-  if(missing(sa.mh)){sa.mh <- FALSE}
+  if (missing(print)){
+    print <- FALSE
+    }
+  if (missing(remove.offshores)){
+    offshores <- TRUE
+    }
+  if (missing(remove.continuingstudies)){
+    continuingstudies <- TRUE
+    }
+  if (missing(institutions)){
+    institutions <- NA
+    }
+  if (missing(postalcodes)){
+    postalcodes <- NA
+    }
+  if (missing(censusdivisions)){
+    censusdivisions <- NA
+    }
+  if (missing(cipcodes)){
+    cipcodes <- NA
+    }
+  if (missing(sa.mh)){
+    sa.mh <- FALSE
+    }
 
   pcs_t <- grepl("exclude", postalcodes) %>% any()
   cds_t <- grepl("exclude", censusdivisions) %>% any()
@@ -75,11 +94,13 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   providers_t <- grepl("exclude", institutions) %>% any()
 
   if(sa.mh == T){
-    postalcodes = c("T1A", "T1B", "T1C", "T1R", "T0J", "T0K")
-    censusdivisions = c("1","2","4")
+    postalcodes <-  c("T1A", "T1B", "T1C", "T1R", "T0J", "T0K")
+    censusdivisions <-  c("1", "2", "4")
   }
 
-  if(missing(rows)){rows <- c()}
+  if (missing(rows)){
+    rows <- c()
+    }
   #Hardcoding the values for the arguments
   ##Measures
 
@@ -141,11 +162,10 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   `CIP Level 6` <- "[CIP Level].[By Six Digits].[Six Digit Level]"
   `CIP Level 2` <- "[CIP Level].[By Two Digits].[Two Digit Level]"
 
-  #source("R/Enrolment_Elements.R", local = T)
   #Setting connection to the cube.
   cnnstr <- paste0("Provider=MSOLAP;
                    Persist Security Info=True;
-                   User ID=", username, ";Password=", password,";
+                   User ID=", username, ";Password=", password, ";
                    Initial Catalog=DCAR_DATAMART_PROD;
                    Data Source=https://psdata.eae.alberta.ca/DCaR.datapump;
                    Location=https://psdata.eae.alberta.ca/DCaR.datapump;
@@ -155,11 +175,17 @@ get_enrolment <- function(measures, rows, institutions, username, password,
 
   #Getting objects
   rows2 <- c()
-  for(i in seq_along(rows)){rows2[i] <- get(objects(pattern = rows[i]))}
+  for (i in seq_along(rows)){
+    rows2[i] <- get(objects(pattern = rows[i]))
+    }
   measures2 <- c()
-  for(i in seq_along(measures)){measures2[i] <- get(objects(pattern = measures[i]))}
+  for (i in seq_along(measures)){
+    measures2[i] <- get(objects(pattern = measures[i]))
+    }
   rows_list <- c("Academic Year")
-  for(i in seq_along(rows)){rows_list <- c(rows_list, rows[i])}
+  for (i in seq_along(rows)){
+    rows_list <- c(rows_list, rows[i])
+    }
 
   #Building the query itself
   ##I've opted to build it so measures and years are always present
@@ -168,29 +194,39 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   axis(qry, 2) <- c("NONEMPTY([Academic Year].[Academic Year].[Academic Year].MEMBERS)")
 
   ##Building the axes
-  for(i in seq_along(rows2)){axis(qry, i+2) <- paste0("NONEMPTY(", rows2[i], ".MEMBERS)")}
+  for (i in seq_along(rows2)){
+    axis(qry, i + 2) <- paste0("NONEMPTY(", rows2[i], ".MEMBERS)")
+    }
 
 
-  if(remove.continuingstudies == T){
+  if (remove.continuingstudies == T){
     rm_cs <- c("EXCEPT([Registration Type].[Registration Type].[Registration Type].MEMBERS",
                "[Registration Type].[Registration Type].[Registration Type].&[3])")
-  } else {rm_cs <- NA}
+  } else {
+    rm_cs <- NA
+    }
 
-  if(remove.offshores == T){
+  if (remove.offshores == T){
     rm_os <- c("EXCEPT([Legal Status].[By Legal Status].[Legal Status].MEMBERS",
                "[Legal Status].[By Legal Status].[Legal Status].&[5])")
-  } else {rm_os <- NA}
+  } else {
+    rm_os <- NA
+    }
 
   fltr <- function(arg, place){
     arg <- na.omit(arg)
     arg <- arg[arg != "exclude"]
-    if(missing(arg)){arg <- NA}
-    if(!is.na(arg[1])){
+    if (missing(arg)){
+      arg <- NA
+      }
+    if (!is.na(arg[1])){
       output <- paste(place,
                       arg, "]",
                       sep = "", collapse = ", ") %>%
         paste0("{", ., "}")
-    } else {output <- NA}
+    } else {
+      output <- NA
+      }
     return(output)
   }
 
@@ -204,20 +240,27 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   #filter for cipcodes
 
   filtercips <- function(sub, place){
-    if(length(sub) > 0){
+    if (length(sub) > 0){
       output <- c()
-      for(i in seq_along(sub)){
-        if(!is.na(sub[i])){
+      for (i in seq_along(sub)){
+        if (!is.na(sub[i])){
           output_part <- paste0(place, sub[i], "]")
-        } else {output_part <- NA}
+        } else {
+          output_part <- NA
+          }
         output <- c(output, output_part)
       }
-      if(is.na(output[1])){output <- NA} else
-      {output <- paste(output, collapse = ", ")}
-      #output <- ifelse(is.na(output[1]), NA, paste0("{", output, "}"))
-    } else {output <- NA}
+      if (is.na(output[1])){
+        output <- NA
+        } else {
+        output <- paste(output, collapse = ", ")
+        }
+    } else {
+      output <- NA
+      }
     return(output)
   }
+
   cips_2 <- cipcodes[str_length(cipcodes) == 2]
   cips_4 <- cipcodes[str_length(cipcodes) == 5]
   cips_6 <- cipcodes[str_length(cipcodes) == 7]
@@ -230,10 +273,9 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   cips <- paste(cips, collapse = ", ")
   cips <- ifelse(is.na(cips[1]), NA, paste0("{", cips, "}"))
   cips <- ifelse(cips == "{}", NA, cips)
-  #print(cips)
 
   excluder <- function(input, test, place){
-    if(test == T){
+    if (test == T){
       output <- gsub("},", "}", input)
       output <- paste0("EXCEPT(", place, ".MEMBERS, ", output, ")")
     } else (output <- input)
@@ -251,17 +293,20 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   slices <- c("([Registration Status].[By Registration Group].[Registration Group].&[1]",
               providers, pcs, cds, cips, rm_cs, rm_os, "[Submission Status].[Submission Status].&[1])") %>%
     na.omit()
-  #print(slices)
   slicers(qry) <- slices
 
   #Print out MDX string used.
   mdx <- olapR::compose(qry)
-  if(print == TRUE){print(mdx)}
+  if (print == TRUE){
+    print(mdx)
+    }
 
   #Execute the query and clean the dataframe.
   df <- executeMD(olapCnn, qry)
-  if(is.null(df)){message("Whoops! Something went wrong...")}
-  else{
+  if (is.null(df)){
+    message("Whoops! Something went wrong...")
+    }
+  else {
     df <- df %>%
       as.data.frame()
     df$measure <- row.names(df)
@@ -269,10 +314,10 @@ get_enrolment <- function(measures, rows, institutions, username, password,
       as_tibble() %>%
       mutate(., variable = gsub("St. Mary's", "StMary's", variable)) %>%
       group_by(measure, variable) %>%
-      summarise(value = sum(value, na.rm=T)) %>%
+      summarise(value = sum(value, na.rm = T)) %>%
       filter(value > 0) %>%
       spread(measure, value) %>%
-      separate(., variable, rows_list[0:length(rows)+1], sep = "\\.")
+      separate(., variable, rows_list[0:length(rows) + 1], sep = "\\.")
   }
   return(df)
 }
