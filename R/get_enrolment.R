@@ -110,6 +110,7 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   FLE <- "[Measures].[FLE]"
   `Calculated Full-Time for Year` <- "[Measures].[Calculated Full Time for Year]"
   `Calculated Part-Time for Year`  <- "[Measures].[Calculated Part Time for Year]"
+  All <- "[Measures].AllMembers"
 
   ##Rows
   ###Tombstone
@@ -153,7 +154,7 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   `Credential Type` <- "[Credential Type].[Credential Type].[Credential Type]"
   `Program Type` <- "[Program Type].[Program Type].[Program Type]"
   `Program Band` <- "[Program Band].[Program Band].[Program Band]"
-  `Program Name` <- "[Program and Specialization].[Program Name].[Program Name]"
+  `Program Name` <- "[Program Specialization Name].[By Program Name].[Program Name]"
   `Program Name Code` <- "[Program and Specialization].[Program Code].[Program Code]"
   `Program Specialization` <- "[Program and Specialization].[Specialization Name].[Specialization Name]"
   `Program Specialization Code` <- "[Program and Specialization].[Specialization Code].[Specialization Code]"
