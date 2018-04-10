@@ -168,8 +168,8 @@ get_enrolment <- function(measures, rows, institutions, username, password,
                    Persist Security Info=True;
                    User ID=", username, ";Password=", password, ";
                    Initial Catalog=DCAR_DATAMART_PROD;
-                   Data Source=https://psdata.eae.alberta.ca/DCaR.datapump;
-                   Location=https://psdata.eae.alberta.ca/DCaR.datapump;
+                   Data Source=https://PSData.ae.alberta.ca/DCaR.datapump;
+                   Location=https://PSData.ae.alberta.ca/DCaR.datapump;
                    MDX Compatibility=1;Safety Options=2;MDX Missing Member Mode=Error")
   olapCnn <- OlapConnection(cnnstr)
   qry <- Query()

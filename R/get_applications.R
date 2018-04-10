@@ -140,8 +140,8 @@ get_applications <- function(measures, rows,
                     Persist Security Info=True;
                     User ID=", username, ";Password=", password, ";
                     Initial Catalog=DCAR_DATAMART_ASI_PROD;
-                    Data Source=https://psdata.eae.alberta.ca/DCaR.datapump/ASI;
-                    Location=https://psdata.eae.alberta.ca/DCaR.datapump/ASI;
+                    Data Source=https://PSData.ae.alberta.ca/DCaR.datapump/ASI;
+                    Location=https://PSData.ae.alberta.ca/DCaR.datapump/ASI;
                     MDX Compatibility=1;
                     Safety Options=2;
                     MDX Missing Member Mode=Error")
