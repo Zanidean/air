@@ -1,4 +1,4 @@
-#'Pull data from LERS
+#'Pull Tidy Data from LERS
 #'@param measures Select possible measurements
 #'@param rows Select rows to cut data by
 #'@param institutions Optional: Filters by Institution. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_applications.R
 \name{get_applications}
 \alias{get_applications}
-\title{Pull data from ASI}
+\title{Pull Tidy Data from ASI}
 \usage{
 get_applications(measures, rows, institutions, username, password, print = F,
   postalcodes, censusdivisions, cipcodes, sa.mh = F)
@@ -27,13 +27,10 @@ get_applications(measures, rows, institutions, username, password, print = F,
 \item{cipcodes}{Optional: Filters by Cip Code of any length, can used mixed vector with any length cip codes together.}
 }
 \description{
-Pull data from ASI
+Pull Tidy Data from ASI
 }
 \examples{
 df <- get_applications(measures = c("Unique Applicant Static", "Application Record Count"),
                    rows = c("Provider", "Gender"),
-                   institutions = c("MH", "MU", "UA"),
-                institutions = c("MH", "MU", "UA"),
-                postalcodes = c("exclude", "T1C"),
-                censusdivision = c("exclude", "1"))
+                   institutions = c("MH", "MU", "UA"))
 }

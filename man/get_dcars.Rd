@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_dcars.R
 \name{get_dcars}
 \alias{get_dcars}
-\title{Pull data from both ASI and LERS}
+\title{Pull Tidy Data from both ASI and LERS}
 \usage{
 get_dcars(app_measures, enrol_measures, rows, institutions)
 }
@@ -18,7 +18,7 @@ get_dcars(app_measures, enrol_measures, rows, institutions)
 \item{password}{Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password"}
 }
 \description{
-Pull data from both ASI and LERS
+Pull Tidy Data from both ASI and LERS
 }
 \examples{
 df <- get_dcars(app_measures = c("Unique Applicant Static"),

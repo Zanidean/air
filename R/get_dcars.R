@@ -1,4 +1,4 @@
-#'Pull data from both ASI and LERS
+#'Pull Tidy Data from both ASI and LERS
 #'@param app_measures Select possible measurements from ASI
 #'@param enrol_measures Select possible measurements from LERS
 #'@param institutions Filters by Institution

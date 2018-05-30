@@ -1,4 +1,4 @@
-#'Pull data from ASI
+#'Pull Tidy Data from ASI
 #'@param measures Select possible measurements
 #'@param rows Select rows to cut data by
 #'@param institutions Optional: Filters by Institution. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
@@ -12,10 +12,7 @@
 #'@examples
 #' df <- get_applications(measures = c("Unique Applicant Static", "Application Record Count"),
 #'                    rows = c("Provider", "Gender"),
-#'                    institutions = c("MH", "MU", "UA"),
-#'                 institutions = c("MH", "MU", "UA"),
-#'                 postalcodes = c("exclude", "T1C"),
-#'                 censusdivision = c("exclude", "1"))
+#'                    institutions = c("MH", "MU", "UA"))
 #'@export get_applications
 
 get_applications <- function(measures, rows,

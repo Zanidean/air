@@ -9,8 +9,8 @@ Authors@R:  c(
     person("Jared", "Prins",  ,"jared.prins@ualberta.ca","ctb")
     )
 LazyData: TRUE
-License: GPL-3 | file LICENSE
+License: GPL-3
 Depends: olapR, tidyverse
 Imports: olapR, tidyverse
 RoxygenNote: 6.0.1
-
+BugReports: AZanidean@mhc.ab.ca

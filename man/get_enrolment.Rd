@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_enrolment.R
 \name{get_enrolment}
 \alias{get_enrolment}
-\title{Pull data from LERS}
+\title{Pull Tidy Data from LERS}
 \usage{
 get_enrolment(measures, rows, institutions, username, password, print = F,
   remove.offshores = T, remove.continuingstudies = T, postalcodes,
@@ -28,7 +28,7 @@ get_enrolment(measures, rows, institutions, username, password, print = F,
 \item{cipcodes}{Optional: Filters by Cip Code of any length, can used mixed vector with any length cip codes together.}
 }
 \description{
-Pull data from LERS
+Pull Tidy Data from LERS
 }
 \examples{
 df <- get_enrolment(measures = c("Unique Student Static", "FLE"),
