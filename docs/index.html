@@ -63,19 +63,22 @@
 <p>air is a package for pulling tidy data frames from LERS and ASI</p>
 <p><code><a href="reference/get_enrolment.html">get_enrolment()</a></code>: Pulls data from the LERS live cube</p>
 <p><code><a href="reference/get_applications.html">get_applications()</a></code>: Pulls data form the ASI live cube</p>
-<p><code><a href="reference/get_dcars.html">get_dcars()</a></code>: Uses both functions to create a dataframe of both enrolments and applicants</p>
+<p><code><a href="reference/get_dcars.html">get_dcars()</a></code>: Uses both functions to create a dataframe of both enrollments and applicants</p>
 <p><code><a href="reference/get_rate.html">get_rate()</a></code>: Uses ASI cube to automatically calculate the conversion or acceptance rates</p>
 <p><code><a href="reference/air_vars.html">air_vars()</a></code>: Returns a list of all exact strings to put into the above functions.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
+<p>Installing air is not as simple as it may seem. This package depends on some parts of Microsoft R and a SQL service.</p>
+<p>These installation instructions can be found <a href="https://docs.microsoft.com/en-us/machine-learning-server/r-client/install-on-windows">here</a>.</p>
+<p>Once you’ve got that all sorted out, you’ll be able to easily install air. The latest version can be installed like this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(devtools)
 devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_bitbucket">install_bitbucket</a></span>(<span class="st">"ecortens/air"</span>, <span class="dt">auth_user =</span> <span class="st">""</span>, <span class="dt">password =</span> <span class="st">""</span>)</code></pre></div>
 </div>
-<div id="typical-use" class="section level2">
+<div id="usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#typical-use" class="anchor"></a>Typical Use</h2>
+<a href="#usage" class="anchor"></a>Usage</h2>
 <p>If you’ve used the Excel templates provided by the ministry, then you know the frustration of force closes, long waits, and difficult reproducibility - air is meant to help out with these problems.</p>
 <p>The syntax of air attempts to get as close to a natural language request as is possible, while making some assumptions about how you’d like to structure that request.</p>
 <p>You may request <em>“Please pull FLE enrolment for Medicine Hat College by Program”</em></p>
@@ -131,9 +134,8 @@ devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocument
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p><a href="Q:/StrategicResearch/Rules%20and%20Procedures%20Folder/Checklists%20and%20procedures/Procedure%20Manual/Data%20Analysis/Home.html">Analysis Home</a>.</p>
 </div>
-
       </footer>
 </div>
 

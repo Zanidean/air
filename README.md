@@ -7,7 +7,7 @@ air is a package for pulling tidy data frames from LERS and ASI
 
 `get_applications()`: Pulls data form the ASI live cube
 
-`get_dcars()`: Uses both functions to create a dataframe of both enrolments and applicants
+`get_dcars()`: Uses both functions to create a dataframe of both enrollments and applicants
 
 `get_rate()`: Uses ASI cube to automatically calculate the conversion or acceptance rates
 
@@ -16,12 +16,19 @@ air is a package for pulling tidy data frames from LERS and ASI
 
 Installation
 ------------
+
+Installing air is not as simple as it may seem. This package depends on some parts of Microsoft R and a SQL service.
+
+These installation instructions can be found [here](https://docs.microsoft.com/en-us/machine-learning-server/r-client/install-on-windows).
+
+Once you've got that all sorted out, you'll be able to easily install air. The latest version can be installed like this:
+
 ``` R
 install.packages(devtools)
 devtools::install_bitbucket("ecortens/air", auth_user = "", password = "")
 ```
 
-Typical Use
+Usage
 ------------
 
 If you've used the Excel templates provided by the ministry, then you know the frustration of force closes, long waits, and difficult reproducibility - air is meant to help out with these problems. 
