@@ -1,0 +1,114 @@
+---
+title: "How to use air"
+author: "Alex Zanidean"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    css: P:/custom.css
+    theme: lumen
+    toc: yes
+---
+
+If you're not in the right place, maybe you want to go to our [Analysis Home.](Q:\StrategicResearch\Rules and Procedures Folder\Checklists and procedures\Procedure Manual\Data Analysis\Home.html)
+
+This document will serve as a guide for using air and it's many DCARS related features.
+
+```{r, echo = F, message = F}
+library(air)
+```
+
+##Security
+
+If you don't have a username and password with the proper permissions to access DCARS, then air will not work. The best method for using air is to define your credentials in a .profile file, as air will first look for the option 'siams.username' and 'siams.password'. If this is not found, then it will look at the argument 'username' and 'password' in the function - this is not recommended as it displays your password in plaintext. Lastly, if nothing is supplied it will pop-up a field and require some credential input to proceed.
+
+
+##Dependencies
+
+This package was developed using olapR from Microsoft, so it's best to use Microsoft R-Client instead of R-Open as this gives you the air dependency. Once installed, you'll need to change into this 64-bit R version using your global options.
+
+[This will show you how to install Microsoft R.](https://docs.microsoft.com/en-us/machine-learning-server/r-client/install-on-windows)
+
+The package olapR can be manually transferred into an open r library, but following this tutorial installs the necessary SQL connectors to access DCARS data.
+
+air needs to be installed from source. [Information on this package can be found here.](Q:\StrategicResearch\Rules and Procedures Folder\Checklists and procedures\Procedure Manual\Data Analysis\Pages\air-howto.html)
+
+##Variables {.tabset}
+
+The arguments for the functions in air require mostly quoted and exact strings. To view available variables to cut measures by, you can run the *air_vars* function on a cube to return possible string.
+
+###ASI
+```{r}
+air_vars("ASI")
+```
+
+###LERS
+```{r}
+air_vars("LERS")
+```
+
+###Institution Codes
+
+Similarly, *air_codes* returns the possible institution codes to filter results by. This is very useful for limiting the scope of data-pulls.
+
+```{r}
+air_codes()
+```
+
+
+##Get Data {.tabset}
+
+These are the family of *get* functions which 'get' data. More filters are available per function, depending on cube availability.
+
+###get_enrolment
+
+This function logs into LERS, pulls data, and then cleans it into a tidy format. More arguments include an option to print the whole MDX query, filtering on postal codes, census divisions, and CIP codes.
+
+```{r}
+get_enrolment(c("FLE", "Unique Student Static"), #supply a vector of measures
+              "Gender", #rows to split data by
+              "MH") #filter by institution
+```
+
+###get_applications
+
+This function logs into ASI, pulls data, and then cleans it into a tidy format. More arguments include an option to print the whole MDX query, filtering on postal codes, census divisions, and CIP codes.
+
+```{r}
+get_applications("Unique Applicant Static", #supply a vector of measures
+                 "Credential Type", #rows to split data by
+                 "MH") #filter by institution
+```
+
+###get_dcars
+
+This function logs into both ASI and LERS, pulls data, and then cleans it into a tidy format. No filters are available yet, though this will be available in a future update.
+
+```{r}
+get_dcars(c("Unique Applicant Static", "Application Record Count"), #asi measures first
+          c("FLE", "Unique Student Static"), #then lers
+          c("Gender", "Credential Type", "Provider"), #split by which rows?
+          institutions = c("MH", "UA")) #filter on providers
+```
+
+###get_rate
+
+This function logs into ASI, pulls relevant data, and computes a conversion rate or acceptance rate per row and filter specifications.
+
+```{r}
+get_rate("Conversion Rate", #either "Conversion Rate" or "Acceptance Rate"
+         "Credential Type", #same rows in ASI
+         "MH") #same filters for institution
+```
+
+###get_diversity
+
+This function logs into LERS, pulls relevant data, and computes a simpson diversity index for the species as defined.
+
+```{r}
+get_diversity("Source Country", #diversity of what?
+              institutions = "MH") #filter on institution
+```
+
+##End
+
+[Analysis Home](Q:\StrategicResearch\Rules and Procedures Folder\Checklists and procedures\Procedure Manual\Data Analysis\Home.html)
