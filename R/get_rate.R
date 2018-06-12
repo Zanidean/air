@@ -58,10 +58,10 @@ get_rate <- function(rate, rows, institutions,
   return(df)
   } else if (rate == "Capture Rate"){
     total <- get_enrolment("FLE",
-                           rows = c("Service Area", rows)) %>%
+                           rows = c("Provider Service Area", rows)) %>%
       rename(Total = FLE)
     inst <- get_enrolment("FLE",
-                          rows = c("Service Area", "Provider", rows),
+                          rows = c("Provider Service Area", "Provider", rows),
                           i = institutions)
 
     df <- left_join(inst, total) %>%
