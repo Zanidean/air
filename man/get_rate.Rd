@@ -2,13 +2,13 @@
 % Please edit documentation in R/get_rate.R
 \name{get_rate}
 \alias{get_rate}
-\title{Calculate either a Conversion or Acceptance rate using ASI data.}
+\title{Calculate Rates from DCARS data}
 \usage{
 get_rate(rate, rows, institutions, sa.mh = F, postalcodes = c(),
   censusdivisions = c())
 }
 \arguments{
-\item{rate}{Either Conversion or Acceptance rate}
+\item{rate}{Either Conversion, Acceptance, or Capture Rates}
 
 \item{rows}{Select rows to cut data by. Defaults to "Provider"}
 
@@ -19,5 +19,5 @@ get_rate(rate, rows, institutions, sa.mh = F, postalcodes = c(),
 \item{password}{Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".}
 }
 \description{
-Calculate either a Conversion or Acceptance rate using ASI data.
+Calculate Rates from DCARS data
 }

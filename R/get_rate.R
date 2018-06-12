@@ -1,6 +1,6 @@
-#'Calculate either a Conversion or Acceptance rate using ASI data.
+#'Calculate Rates from DCARS data
 #'@param rows Select rows to cut data by. Defaults to "Provider"
-#'@param rate Either Conversion or Acceptance rate
+#'@param rate Either Conversion, Acceptance, or Capture Rates
 #'@param institutions Optional: Filters by Institution
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
@@ -17,7 +17,8 @@ get_rate <- function(rate, rows, institutions,
   if(missing(postalcodes)){postalcodes <- NA}
   if(missing(censusdivisions)){censusdivisions <- NA}
 
-  qualified <- get_applications("Unique Applicant Static", c(rows, "Qualified"),
+  if(rate != "Capture Rate") {
+    qualified <- get_applications("Unique Applicant Static", c(rows, "Qualified"),
                                 institutions = institutions,
                                 sa.mh = sa.mh,
                                 postalcodes = postalcodes,
@@ -55,4 +56,18 @@ get_rate <- function(rate, rows, institutions,
     select_(.dots = c(lapply(c("Academic Year", rows, rate), as.symbol)))
 
   return(df)
+  } else if (rate == "Capture Rate"){
+    total <- get_enrolment("FLE",
+                           rows = c("Service Area", rows)) %>%
+      rename(Total = FLE)
+    inst <- get_enrolment("FLE",
+                          rows = c("Service Area", "Provider", rows),
+                          i = institutions)
+
+    df <- left_join(inst, total) %>%
+      mutate(`Capture Rate` = FLE/Total) %>%
+      select(-FLE, -Total)
+
+    return(df)
+  }
 }
