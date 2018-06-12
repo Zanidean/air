@@ -9,8 +9,6 @@ output:
     toc: yes
 ---
 
-If you're not in the right place, maybe you want to go to our [Analysis Home.](Q:\StrategicResearch\Rules and Procedures Folder\Checklists and procedures\Procedure Manual\Data Analysis\Home.html)
-
 This document will serve as a guide for using air and it's many DCARS related features.
 
 ```{r, echo = F, message = F}
@@ -109,6 +107,3 @@ get_diversity("Source Country", #diversity of what?
               institutions = "MH") #filter on institution
 ```
 
-##End
-
-[Analysis Home](Q:\StrategicResearch\Rules and Procedures Folder\Checklists and procedures\Procedure Manual\Data Analysis\Home.html)
