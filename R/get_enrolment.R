@@ -121,6 +121,7 @@ get_enrolment <- function(measures, rows, institutions, username, password,
 
   `Source Country` <- "[Source Country].[Source Country].[Source Country]"
   `Aboriginal Indicator` <- "[Aboriginal Indicator].[By Aboriginal Indicator].[Aboriginal Indicator]"
+  `Aboriginal Grouping` <- "[Aboriginal Indicator].[By Aboriginal Grouping].[Aboriginal Grouping]"
   `Country Of Citizenship` <- "[Country Of Citizenship].[Country Of Citizenship].[Country Of Citizenship]"
   Language <- "[Language].[Language].[Language]"
   `Grade Completed Year` <- "[Grade Completed Year].[By Grade Completed Year].[Grade Completed Year]"
@@ -148,6 +149,7 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   `Country` <- "[Service Area].[By Country and Province].[Country]"
   `Province` <- "[Service Area].[By Country and Province].[Province]"
   `Service Area` <- "[Service Area].[By Country and Province].[Service Area]"
+  `Country and Province` <- "[Service Area].[By Country and Province]"
   `Postal Code` <- "[Service Area].[By Country and Province].[Postal Code]"
   `Census Division` <- "[Census Division].[By Country and Province].[Census Division]"
   ###Program
@@ -318,7 +320,13 @@ get_enrolment <- function(measures, rows, institutions, username, password,
       summarise(value = sum(value, na.rm = T)) %>%
       filter(value > 0) %>%
       spread(measure, value) %>%
-      separate(., variable, rows_list[0:length(rows) + 1], sep = "\\.")
+      mutate(variable = variable %>% str_replace("Division No.", "Division Number")) %>%
+      mutate(variable = str_replace(variable, "(\\.[0-9][0-9]\\.)",
+                                    str_extract(variable, "(\\.[0-9][0-9])")) %>%
+               str_replace("\\.\\,", "\\,") %>%
+               str_replace("\\.\\,", "\\,")) %>%
+      separate(., variable, rows_list[0:length(rows) + 1], sep = "\\.") %>%
+      mutate(`Academic Year` = `Academic Year` %>% str_replace("-20", "-"))
   }
   return(df)
 }
