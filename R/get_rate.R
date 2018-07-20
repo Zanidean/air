@@ -57,16 +57,17 @@ get_rate <- function(rate, rows, institutions,
 
   return(df)
   } else if (rate == "Capture Rate"){
-    total <- get_enrolment("FLE",
-                           rows = c("Provider Service Area", rows)) %>%
-      rename(Total = FLE)
-    inst <- get_enrolment("FLE",
-                          rows = c("Provider Service Area", "Provider", rows),
-                          i = institutions)
-
-    df <- left_join(inst, total) %>%
-      mutate(`Capture Rate` = FLE/Total) %>%
-      select(-FLE, -Total)
+    # total <- get_enrolment("FLE",
+    #                        rows = c("Provider Service Area", rows)) %>%
+    #   rename(Total = FLE)
+    # inst <- get_enrolment("FLE",
+    #                       rows = c("Provider Service Area", "Provider", rows),
+    #                       i = institutions)
+    #
+    # df <- left_join(inst, total) %>%
+    #   mutate(`Capture Rate` = FLE/Total) %>%
+    #   select(-FLE, -Total)
+    warning("Capture Rate doesn't work!")
 
     return(df)
   }
