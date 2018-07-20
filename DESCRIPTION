@@ -3,7 +3,7 @@ Type: Package
 Title: Pull DCaR data into Tidy Data Frames
 Date: 2018-07-13
 Version: 0.1.92
-Authors@R:  c(
+Authors@R: c(
     person("Alex", "Zanidean", ,"AZanidean@mhc.ab.ca", c("aut", "cre")),
     person("Evan", "Corten", ,"ecortens@myroyal.ca", "ctb"),
     person("Jared", "Prins",  ,"jared.prins@ualberta.ca","ctb")
@@ -14,3 +14,4 @@ Depends: olapR, tidyverse
 Imports: olapR, tidyverse
 RoxygenNote: 6.0.1
 BugReports: AZanidean@mhc.ab.ca
+Suggests: testthat
