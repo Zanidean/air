@@ -25,7 +25,7 @@ Once you've got that all sorted out, you'll be able to easily install air. The l
 
 ``` R
 install.packages(devtools)
-devtools::install_bitbucket("ecortens/air", auth_user = "", password = "")
+devtools::install_github("zanidean/air")
 ```
 
 Usage
@@ -64,4 +64,4 @@ get_enrolment(measures = "FLE",
               sa.mh = T)
 ```
 
-For information about errors and problems, check the [problems and solutions file.](file:///Q:/StrategicResearch/Rules%20and%20Procedures%20Folder/Checklists%20and%20procedures/Procedure%20Manual/Data%20Analysis/Pages/issues.html#air)
+
