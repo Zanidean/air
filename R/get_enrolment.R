@@ -110,6 +110,7 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   FLE <- "[Measures].[FLE]"
   `Calculated Full-Time for Year` <- "[Measures].[Calculated Full Time for Year]"
   `Calculated Part-Time for Year`  <- "[Measures].[Calculated Part Time for Year]"
+  `Record Count` <- "[Measures].[Record Count]"
   All <- "[Measures].AllMembers"
 
   ##Rows
@@ -126,6 +127,8 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   Language <- "[Language].[Language].[Language]"
   `Grade Completed Year` <- "[Grade Completed Year].[By Grade Completed Year].[Grade Completed Year]"
   `Current Status` <- "[Current Status].[Current Status].[Current Status]"
+  `Completion Grouping` <- "[Completion Status].[By Completion Grouping].[Completion Grouping]"
+
 
   ###Registration
   `Year Of Study` <- "[Year Of Study].[Year Of Study].[Year Of Study]"
@@ -137,6 +140,8 @@ get_enrolment <- function(measures, rows, institutions, username, password,
   `Level of Study` <- "[Level Of Study].[Level Of Study].[Level Of Study]"
   `Calculated Learned Registration Status` <- "[Calculated Learner Registration Status].[Calculated Learner Registration Status].[Calculated Learner Registration Status]"
   `Attainment` <- "[Attainment].[Attainment].[Attainment]"
+
+
 
   ###Provider
   Provider <- "[Provider].[Provider].[Provider]"

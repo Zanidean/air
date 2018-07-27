@@ -5,10 +5,14 @@
 #'@param type Optional: Type of Simpson Diversity Index, Defaults to "Dominance"
 #'@export get_diversity
 #'
-get_diversity <- function(species, rows, institutions, type){
-  if(missing(type)){type = "dominance"}
+get_diversity <- function(species, rows, institutions, type) {
+  if (missing(type)) {
+    type = "dominance"
+  }
   #if(missing(inst)){inst = c()}
-  if(missing(rows)){rows = c()}
+  if (missing(rows)) {
+    rows = c()
+  }
 
   sdi2 <- function (col, data, type)
   {
@@ -16,21 +20,26 @@ get_diversity <- function(species, rows, institutions, type){
     Numer <- sum(data$number2)
     Denom <- sum(data[col]) * (sum(data[col]) - 1)
     if (type == "dominance") {
-      DI <- 1 - (Numer/Denom)
+      DI <- 1 - (Numer / Denom)
     }
     else if (type == "reciprocal") {
-      DI <- 1/(Numer/Denom)
+      DI <- 1 / (Numer / Denom)
     }
     else if (type == "SI") {
-      DI <- Numer/Denom
+      DI <- Numer / Denom
     }
     return(DI)
   }
 
-  df <- get_enrolment("Unique Student Static", c(species, rows), institutions = institutions) %>%
-    group_by_(.dots = c(lapply(c("Academic Year", rows), as.symbol))) %>%
-    do(summarise(., Diversity = sdi2(col = "Unique Student Static",
-                            data = ., type = type)))
+  df <-
+    get_enrolment("Unique Student Static", c(species, rows), institutions = institutions) %>%
+    group_by_(.dots = c(lapply(c(
+      "Academic Year", rows
+    ), as.symbol))) %>%
+    do(summarise(., Diversity = sdi2(
+      col = "Unique Student Static",
+      data = ., type = type
+    )))
 
 
   return(df)
