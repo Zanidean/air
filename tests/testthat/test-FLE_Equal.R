@@ -31,3 +31,14 @@ test_that("Split FLE is equal to summarized FLE - Provider", {
   expect_lt(c, 0.001)
 })
 
+
+test_that("Split FLE is equal to summarized FLE - Provider and Program", {
+  a <- get_enrolment("FLE", username = uname, password = pwd)
+  b <- get_enrolment("FLE", c("Provider", "Program Name"),
+                     username = uname, password = pwd) %>%
+    group_by(`Academic Year`) %>%
+    summarise(FLE = sum(FLE))
+  c <- (a$FLE - b$FLE) %>% sum
+  expect_lt(c, 0.001)
+})
+

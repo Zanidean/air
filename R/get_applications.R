@@ -193,10 +193,10 @@ get_applications <- function(measures, rows,
   providers <- fltr(institutions, "[Provider].[By Current Sector].[Provider].&[")
 
   #Giving a filter option for postalcodes
-  pcs <- fltr(postalcodes, "[Service Area].[By Service Area].[Postal Code].&[ME")
+  pcs <- fltr(postalcodes, "[Service Area].[By Service Area].[Postal Code].&[CAME")
 
   #Giving a filter option for census division in service area
-  cds <- fltr(censusdivisions, "[Census Division].[By Census Division].[Census Division].&[0")
+  cds <- fltr(censusdivisions, "[Census Divsion].[By Census Division].[Census Division].&[0")
   #filter for cipcodes
 
   filtercips <- function(sub, place){
@@ -277,6 +277,16 @@ get_applications <- function(measures, rows,
       summarise(value = sum(value, na.rm = T)) %>%
       filter(value > 0) %>%
       spread(measure, value) %>%
+      mutate(variable = variable %>% str_replace("Division No.", "Division Number")) %>%
+      mutate(
+        variable = str_replace(
+          variable,
+          "(\\.[0-9][0-9]\\.)",
+          str_extract(variable, "(\\.[0-9][0-9])")
+        ) %>%
+          str_replace("\\.\\,", "\\,") %>%
+          str_replace("\\.\\,", "\\,")
+      )%>%
       separate(., variable, rows_list[0:length(rows) + 1], sep = "\\.")
   }
   return(df)
