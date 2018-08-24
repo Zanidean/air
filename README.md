@@ -13,6 +13,7 @@ air is a package for pulling tidy data frames from LERS and ASI
 
 `air_vars()`: Returns a list of all exact strings to put into the above functions.
 
+`mine_enrolment()`: Returns data of all permutations of row and institution inputs. Can also be used to detect significant change. 
 
 Installation
 ------------
