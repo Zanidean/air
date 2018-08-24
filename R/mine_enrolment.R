@@ -23,6 +23,7 @@ mine_enrolment <- function(measure,
                            ages = c(),
                            sa.mh = F,
                            detect_change = F,
+                           permutations = 1,
                            min_year, max_year) {
 
   require(purrr)
@@ -58,90 +59,152 @@ mine_enrolment <- function(measure,
     max_year <- NA
   }
 
+  # This is a function to determine if and by how much an XMR changes
+  xmr_change <- function(dataframe){
+
+    # Defining Range for Change
+    ty_min <- dataframe$`Academic Year` %>% unique %>% min(na.rm = T)
+
+
+    if(min_year %in% dataframe$`Academic Year`){
+      ty_min <- min_year
+    }
+
+    ty_max <- dataframe$`Academic Year` %>% unique %>% max(na.rm = T)
+    if(max_year %in% dataframe$`Academic Year`){
+      ty_min <- max_year
+    }
+
+    # this determines the 'central line' delta
+    c_delta <- dataframe$`Central Line`[dataframe$`Academic Year` == ty_max] -
+      dataframe$`Central Line`[dataframe$`Academic Year` == ty_min]
+
+    # this determines the overall enrolment delta
+    e_delta <- dataframe[[measure]][dataframe$`Academic Year` == ty_max] -
+      dataframe[[measure]][dataframe$`Academic Year` == ty_min]
+
+    # this adds columns to data to determine change.
+    dataframe %>%
+      mutate(Central_Delta = c_delta,
+             Enrol_Delta = e_delta,
+             Delta_Range = paste0(ty_min, " to ", ty_max),
+             Change = ifelse(sign(Central_Delta) == -1, "Negative", "Positive"),
+             Change = ifelse(Central_Delta == 0, "No Change", Change))
+  }
+
 
   # this is where you calculate the permutations of each input
   ro <- rows
   ins <- institutions
 
-  d <- expand.grid(ins = ins, ro = ro) %>%
-    mutate(ro = as.character(ro),
-           ins = as.character(ins))
+  if(permutations == 1){
+    d <- expand.grid(ins = ins, ro = ro) %>%
+      mutate(ro = as.character(ro),
+             ins = as.character(ins))
 
-  # this is where you map each input to the function, and clean up data
+    if(detect_change == T){
+      require(xmrr)
+      dat <- map2(d$ro, d$ins, function(ro, ins){
+        get_enrolment(measure,
+                      ro,
+                      ins,
+                      postalcodes = postalcodes,
+                      censusdivisions = censusdivisions,
+                      cipcodes = cipcodes,
+                      ages = ages,
+                      sa.mh = sa.mh) %>%
+          mutate(Factor = ro,
+                 Institution = ins) %>%
+          rename(Variable = 2) %>%
+          group_by(Variable) %>%
+          do(xmr(., measure)) %>%
+          ungroup
+      }) %>% bind_rows %>%
+        group_by(Institution, Factor, Variable) %>%
+        nest %>%
+        mutate(data = map(data, xmr_change)) %>%
+        unnest
 
-  if(detect_change == T){
-    require(xmrr)
-    # This is a function to determine if and by how much an XMR changes
-    xmr_change <- function(dataframe){
-
-      # Defining Range for Change
-      ty_min <- dataframe$`Academic Year` %>% unique %>% min(na.rm = T)
-
-
-      if(min_year %in% dataframe$`Academic Year`){
-        ty_min <- min_year
-      }
-
-      ty_max <- dataframe$`Academic Year` %>% unique %>% max(na.rm = T)
-      if(max_year %in% dataframe$`Academic Year`){
-        ty_min <- max_year
-      }
-
-      # this determines the 'central line' delta
-      c_delta <- dataframe$`Central Line`[dataframe$`Academic Year` == ty_max] -
-        dataframe$`Central Line`[dataframe$`Academic Year` == ty_min]
-
-      # this determines the overall enrolment delta
-      e_delta <- dataframe[[measure]][dataframe$`Academic Year` == ty_max] -
-        dataframe[[measure]][dataframe$`Academic Year` == ty_min]
-
-      # this adds columns to data to determine change.
-      dataframe %>%
-        mutate(Central_Delta = c_delta,
-               Enrol_Delta = e_delta,
-               Delta_Range = paste0(ty_min, " to ", ty_max),
-               Change = ifelse(sign(Central_Delta) == -1, "Negative", "Positive"),
-               Change = ifelse(Central_Delta == 0, "No Change", Change))
+    } else {
+      dat <- map2(d$ro, d$ins, function(ro, ins){
+        get_enrolment(measure,
+                      ro,
+                      ins,
+                      postalcodes = postalcodes,
+                      censusdivisions = censusdivisions,
+                      cipcodes = cipcodes,
+                      ages = ages,
+                      sa.mh = sa.mh) %>%
+          mutate(Factor = ro,
+                 Institution = ins) %>%
+          rename(Variable = 2)
+      }) %>% bind_rows %>%
+        group_by(Institution, Factor, Variable) %>%
+        nest %>%
+        unnest
     }
 
-    dat <- map2(d$ro, d$ins, function(ro, ins){
-      get_enrolment(measure,
-                    ro,
-                    ins,
-                    postalcodes = postalcodes,
-                    censusdivisions = censusdivisions,
-                    cipcodes = cipcodes,
-                    ages = ages,
-                    sa.mh = sa.mh) %>%
-        mutate(Factor = ro,
-               Institution = ins) %>%
-        rename(Variable = 2) %>%
-        group_by(Variable) %>%
-        do(xmr(., measure)) %>%
-        ungroup
-    }) %>% bind_rows %>%
-      group_by(Institution, Factor, Variable) %>%
-      nest %>%
-      mutate(data = map(data, xmr_change)) %>%
-      unnest
+  } else if (permutations == 2){
+    require(gtools)
+    pp <- gtools::combinations(n = length(ro),
+                               r = 2,
+                               repeats.allowed = F, v = ro) %>%
+      as.tibble() %>%
+      rename(ro1 = V1, ro2 = V2)
 
-  } else {
-    dat <- map2(d$ro, d$ins, function(ro, ins){
-      get_enrolment(measure,
-                    ro,
-                    ins,
-                    postalcodes = postalcodes,
-                    censusdivisions = censusdivisions,
-                    cipcodes = cipcodes,
-                    ages = ages,
-                    sa.mh = sa.mh) %>%
-        mutate(Factor = ro,
-               Institution = ins) %>%
-        rename(Variable = 2)
-    }) %>% bind_rows %>%
-      group_by(Institution, Factor, Variable) %>%
-      nest %>%
-      unnest
+    d <- expand.grid(ro1 = ro, ro2 = ro, ins = ins) %>%
+      mutate(ro1 = as.character(ro1),
+             ro2 = as.character(ro2),
+             ins = as.character(ins)) %>%
+      filter(!(ro1 == ro2)) %>% as.tibble %>% semi_join(pp)
+
+    if(detect_change == T){
+      require(xmrr)
+      dat <- pmap(d, function(ro1, ro2, ins){
+        get_enrolment(measure,
+                      c(ro1, ro2),
+                      ins,
+                      postalcodes = postalcodes,
+                      censusdivisions = censusdivisions,
+                      cipcodes = cipcodes,
+                      ages = ages,
+                      sa.mh = sa.mh) %>%
+          mutate(Factor_1 = ro1,
+                 Factor_2 = ro2,
+                 Institution = ins) %>%
+          rename(Variable_1 = 2,
+                 Variable_2 = 3) %>%
+          group_by(Variable_1, Variable_2) %>%
+          do(xmr(., measure)) %>%
+          ungroup
+      }) %>% bind_rows %>%
+        group_by(Institution, Factor_1, Variable_1, Factor_2, Variable_2) %>%
+        nest %>%
+        mutate(data = map(data, xmr_change)) %>%
+        unnest
+    } else {
+      dat <- pmap(d, function(ro1, ro2, ins){
+        get_enrolment(measure,
+                      c(ro1, ro2),
+                      ins,
+                      postalcodes = postalcodes,
+                      censusdivisions = censusdivisions,
+                      cipcodes = cipcodes,
+                      ages = ages,
+                      sa.mh = sa.mh) %>%
+          mutate(Factor_1 = ro1,
+                 Factor_2 = ro2,
+                 Institution = ins) %>%
+          rename(Variable_1 = 2,
+                 Variable_2 = 3) %>%
+          group_by(Variable_1, Variable2) %>%
+          do(xmr(., measure)) %>%
+          ungroup
+      }) %>% bind_rows %>%
+        group_by(Institution, Factor_1, Variable_1, Factor_2, Variable_2) %>%
+        nest %>%
+        unnest
+    }
   }
   return(dat)
 }
