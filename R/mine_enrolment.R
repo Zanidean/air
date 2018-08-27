@@ -6,7 +6,8 @@
 #'@param censusdivisions Optional: Filters by Census Division. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
 #'@param cipcodes Optional: Filters by Cip Code of any length, can used mixed vector with any length cip codes together.
 #'@param ages Optional: Filters by age group.
-#'@param detect Use xmrr to detect significant changes.
+#'@param detect_change Use xmrr to detect significant changes.
+#'@param permutations Degree of row-permutations to use. Max of 2.
 #'@examples
 #' df <- mine_enrolment("FLE",
 #' c("Program Type", "Credential Type", "Gender"),

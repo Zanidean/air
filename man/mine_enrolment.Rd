@@ -6,7 +6,7 @@
 \usage{
 mine_enrolment(measure, rows, institutions = "MH", postalcodes = c(),
   censusdivisions = c(), cipcodes = c(), ages = c(), sa.mh = F,
-  detect_change = F, min_year, max_year)
+  detect_change = F, permutations = 1, min_year, max_year)
 }
 \arguments{
 \item{rows}{Select elements in LERS to permutate combinations of.}
@@ -21,9 +21,11 @@ mine_enrolment(measure, rows, institutions = "MH", postalcodes = c(),
 
 \item{ages}{Optional: Filters by age group.}
 
-\item{measures}{Select a measurement.}
+\item{detect_change}{Use xmrr to detect significant changes.}
 
-\item{detect}{Use xmrr to detect significant changes.}
+\item{permutations}{Degree of row-permutations to use. Max of 2.}
+
+\item{measures}{Select a measurement.}
 }
 \description{
 Mine LERS data for permutations of rows and detect significant changes.
