@@ -197,10 +197,7 @@ mine_enrolment <- function(measure,
                  Factor_2 = ro2,
                  Institution = ins) %>%
           rename(Variable_1 = 2,
-                 Variable_2 = 3) %>%
-          group_by(Variable_1, Variable_2) %>%
-          do(xmr(., measure)) %>%
-          ungroup
+                 Variable_2 = 3)
       }) %>% bind_rows %>%
         group_by(Institution, Factor_1, Variable_1, Factor_2, Variable_2) %>%
         nest %>%
