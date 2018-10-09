@@ -122,7 +122,6 @@ get_enrolment <-
     #Hardcoding the values for the arguments
     ##Measures
 
-
     `Unique Student Static` <- "[Measures].[Unique Student Static]"
     `Unique Student Current` <- "[Measures].[Unique Student Current]"
     FLE <- "[Measures].[FLE]"
