@@ -130,18 +130,19 @@ air_vars <- function(cube) {
                   "Record Count")
 
     rows <- c(      "Program Name",
-                    "Program Name Code",
+                    "Program Code",
                     "Credential Type",
                     "Program Type",
                     "Program Band",
-                    "Program Specialization",
+                    "Program Specialization Name",
                     "Program Specialization Code",
                     "CIP Level 2",
                     "CIP Level 4",
                     "CIP Level 6",
-                    "Level Of Study", "STEM and BHASE",
-                    "STEM and BHASE Subgroups",
-                    "STEM and BHASE Categories"
+                    "Level Of Study",
+#'                     "STEM and BHASE Subgroups",
+#'                     "STEM and BHASE Categories",
+                    "STEM and BHASE"
 
     )
 

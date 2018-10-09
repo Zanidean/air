@@ -105,13 +105,13 @@ get_pfd <-
 
     `Program Name` <- "[Program Specialization].[By Program].[Program]"
     `Program Specialization Name` <- "[Program Specialization].[By Program].[Specialization]"
-    `Program Name Code` <- "[Program Specialization].[Program Code].[Program Code]"
+    `Program Code` <- "[Program Specialization].[Program Code].[Program Code]"
     `Program Specialization Code` <- "[Program Specialization].[Specialization Code].[Specialization Code]"
     `Provider` <- "[Provider].[By Current Sector].[Provider]"
 
     `STEM and BHASE` <- "[STEM And BHASE].[By STEM And BHASE].[STEM And BHASE]"
-    `STEM and BHASE Subgroups` <- "[STEM And BHASE].[By STEM And BHASE].[STEM And BHASE Subgroups]"
-    `STEM and BHASE Categories` <- "[STEM And BHASE].[By STEM And BHASE].[STEM And BHASE Categories]"
+    #`STEM and BHASE Subgroups` <- "[STEM And BHASE].[By STEM And BHASE].[STEM And BHASE Subgroups]"
+    #`STEM and BHASE Categories` <- "[STEM And BHASE].[By STEM And BHASE].[STEM And BHASE Categories]"
 
     #Setting connection to the cube.
     cnnstr <- paste0(
@@ -231,8 +231,8 @@ get_pfd <-
             "(\\.[0-9][0-9]\\.)",
             str_extract(variable, "(\\.[0-9][0-9])")
           ) %>%
-            str_replace("\\.\\,", "\\,") %>%
-            str_replace("\\.\\,", "\\,")
+            str_replace_all("\\.\\,", "\\,") %>%
+            str_replace_all("\\.\\,", "\\,")
         ) %>%
         separate(., variable, rows_list[0:length(rows) + 1], sep = "\\.") %>%
         mutate(`Fiscal Year` = `Fiscal Year` %>% str_replace("-20", "-") %>% str_replace(" - 20", "-"))
