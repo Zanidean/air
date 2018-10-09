@@ -1,6 +1,6 @@
 #'Pull Tidy Data from PFD
 #'@param measures Select possible measurements
-#'@param rows Select rows to cut data by
+#'@param rows Optional: Select rows to cut data by
 #'@param institutions Optional: Filters by Institution. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
@@ -76,7 +76,7 @@ get_pfd <-
     if (missing(institutions)) {
       institutions <- NA
     }
-
+    providers_t <- grepl("exclude", institutions) %>% any()
     if (missing(rows)) {
       rows <- c()
     }
@@ -157,7 +157,7 @@ get_pfd <-
       axis(qry, i + 2) <- paste0("NONEMPTY(", rows2[i], ".MEMBERS)")
     }
 
-
+    # Filter to select only institutions
     fltr <- function(arg, place) {
       arg <- na.omit(arg)
       arg <- arg[arg != "exclude"]
@@ -174,10 +174,23 @@ get_pfd <-
       }
       return(output)
     }
-
     #Giving a filter option for provider
     providers <- fltr(institutions, "[Provider].[By Provider].[By Provider].&[")
 
+
+    # Exclude list of institutions
+    excluder <- function(input, test, place) {
+      if (test == T) {
+        output <- gsub("},", "}", input)
+        output <- paste0("EXCEPT(", place, ".MEMBERS, ", output, ")")
+      } else
+        (output <- input)
+      return(output)
+    }
+
+    providers <- excluder(providers,
+                          providers_t,
+                          "[Provider Location].[By Provider].[Provider]")
 
 
     slices <-
