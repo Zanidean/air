@@ -81,7 +81,7 @@ get_pfd <-
       rows <- c()
     }
 
-    warning("If you're reading this warning, get_pfd is still in development. Try the Excel cubes provided by the ministry. ")
+    warning("If you're reading this warning, get_pfd is still in development. Try the Excel cubes provided by the ministry if you need confident and accurate information.")
 
     # Measures
     `Cost per FLE` <- "[Measures].[Cost per FLE]"
@@ -89,7 +89,8 @@ get_pfd <-
     `Direct Cost` <- "[Measures].[Direct Cost]"
     `Indirect Cost` <- "[Measures].[Indirect Cost]"
     `Record Count` <- "[Measures].[Record Count]"
-    `FLE` <- "[Measures].[FLE]"
+    `Full Load Equivalent` <- "[Measures].[FLE]"
+    All <- "[Measures].AllMembers"
 
     # Rows
     `CIP Level 2` <- "[Cip Code].[By Two Digits].[Two Digit Level]"
