@@ -20,6 +20,12 @@ get_pfd <-
            password,
            print = F) {
     #defining a new login function
+
+    require(olapR)
+    require(dplyr)
+    require(tidyr)
+    require(stringr)
+
     getLoginDetails <- function() {
       require(tcltk)
       message("Please use pop-up to authorize.")
@@ -67,18 +73,141 @@ get_pfd <-
       print <- FALSE
     }
 
+    if (missing(institutions)) {
+      institutions <- NA
+    }
+
+    if (missing(rows)) {
+      rows <- c()
+    }
+
     warning("If you're reading this warning, get_pfd is still in development. Try the Excel cubes provided by the ministry. ")
 
 
 
     # Measures
+    `Cost per FLE` <- "[Measures].[Cost per FLE]"
+    `Total Program Cost` <- "[Measures].[Total Program Cost]"
 
     # Rows
+    `CIP Level 2` <- "[Cip Code].[By Two Digits].[Two Digit Level]"
+    `Credential Type` <- "[Credential Type].[Credential Type].[Credential Type]"
+    `Provider` <- "[Provider].[By Current Sector].[Provider]"
+
+
+    #Setting connection to the cube.
+    cnnstr <- paste0(
+      "Provider=MSOLAP;
+      Persist Security Info=True;
+      User ID=",
+      username,
+      ";Password=",
+      password,
+      ";
+      Initial Catalog=DCAR_PFD_DM_PROD;
+      Data Source=https://PSData.ae.alberta.ca/DCaR.datapump/PFD;
+      Location=https://PSData.ae.alberta.ca/DCaR.datapump/PFD;
+      MDX Compatibility=1;Safety Options=2;MDX Missing Member Mode=Error"
+    )
+
+
+#'     Provider=MSOLAP.8;Persist Security Info=True;User ID=AZanidean;Initial Catalog=DCAR_PFD_DM_PROD;Data Source=https://PSData.ae.alberta.ca/DCaR.datapump/PFD;Location=https://PSData.ae.alberta.ca/DCaR.datapump/PFD;MDX Compatibility=1;Safety Options=2;MDX Missing Member Mode=Error;Update Isolation Level=2
+#'
+    olapCnn <- OlapConnection(cnnstr)
+    qry <- Query()
+
+
+    #Getting objects
+    rows2 <- c()
+    for (i in seq_along(rows)) {
+      rows2[i] <- get(objects(pattern = rows[i]))
+    }
+    measures2 <- c()
+    for (i in seq_along(measures)) {
+      measures2[i] <- get(objects(pattern = measures[i]))
+    }
+    rows_list <- c("Fiscal Year")
+    for (i in seq_along(rows)) {
+      rows_list <- c(rows_list, rows[i])
+    }
+
+    #Building the query itself
+    ##I've opted to build it so measures and years are always present
+    cube(qry) <- "[PFD Live Cube]"
+    axis(qry, 1) <- c(measures2)
+    axis(qry, 2) <-
+      c("NONEMPTY([Fiscal Year].[Fiscal Year].[Fiscal Year].MEMBERS)")
+
+    ##Building the axes
+    for (i in seq_along(rows2)) {
+      axis(qry, i + 2) <- paste0("NONEMPTY(", rows2[i], ".MEMBERS)")
+    }
+
+
+    fltr <- function(arg, place) {
+      arg <- na.omit(arg)
+      arg <- arg[arg != "exclude"]
+      if (missing(arg)) {
+        arg <- NA
+      }
+      if (!is.na(arg[1])) {
+        output <- paste(place,
+                        arg, "]",
+                        sep = "", collapse = ", ") %>%
+          paste0("{", ., "}")
+      } else {
+        output <- NA
+      }
+      return(output)
+    }
+
+    #Giving a filter option for provider
+    providers <- fltr(institutions, "[Provider].[By Provider].[By Provider].&[")
 
 
 
-    # CnnString
+    slices <-
+      c("([Submission Cycle Status].[Submission Cycle Status].&[2]",
+        providers,
+        "[Submission Status].[Submission Status].&[1])"
+      ) %>%
+      na.omit()
+    slicers(qry) <- slices
 
+    #Print out MDX string used.
+    mdx <- olapR::compose(qry)
+    if (print == TRUE) {
+      print(mdx)
+    }
 
-
+    #Execute the query and clean the dataframe.
+    df <- executeMD(olapCnn, qry)
+    if (is.null(df)) {
+      message("Whoops! Something went wrong...")
+    }
+    else {
+      df <- df %>%
+        as.data.frame()
+      df$measure <- row.names(df)
+      df <- reshape2::melt(df, id.vars = "measure") %>%
+        as_tibble() %>%
+        mutate(., variable = gsub("St. Mary's", "StMary's", variable)) %>%
+        group_by(measure, variable) %>%
+        summarise(value = sum(value, na.rm = T)) %>%
+        filter(value > 0) %>%
+        spread(measure, value) %>%
+        mutate(variable = variable %>% str_replace("Division No.", "Division Number")) %>%
+        mutate(
+          variable = str_replace(
+            variable,
+            "(\\.[0-9][0-9]\\.)",
+            str_extract(variable, "(\\.[0-9][0-9])")
+          ) %>%
+            str_replace("\\.\\,", "\\,") %>%
+            str_replace("\\.\\,", "\\,")
+        ) %>%
+        separate(., variable, rows_list[0:length(rows) + 1], sep = "\\.") %>%
+        mutate(`Fiscal Year` = `Fiscal Year` %>% str_replace("-20", "-") %>% str_replace(" - 20", "-"))
+    }
+    return(df)
 }
