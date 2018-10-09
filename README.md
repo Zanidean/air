@@ -5,7 +5,9 @@ air is a package for pulling tidy data frames from LERS and ASI
 
 `get_enrolment()`: Pulls data from the LERS live cube
 
-`get_applications()`: Pulls data form the ASI live cube
+`get_applications()`: Pulls data from the ASI live cube
+
+`get_pfd()`: Pulls data from the PFD live cube
 
 `get_dcars()`: Uses both functions to create a dataframe of both enrollments and applicants
 
