@@ -83,17 +83,34 @@ get_pfd <-
 
     warning("If you're reading this warning, get_pfd is still in development. Try the Excel cubes provided by the ministry. ")
 
-
-
     # Measures
     `Cost per FLE` <- "[Measures].[Cost per FLE]"
     `Total Program Cost` <- "[Measures].[Total Program Cost]"
+    `Direct Cost` <- "[Measures].[Direct Cost]"
+    `Indirect Cost` <- "[Measures].[Indirect Cost]"
+    `Record Count` <- "[Measures].[Record Count]"
+    `FLE` <- "[Measures].[FLE]"
 
     # Rows
     `CIP Level 2` <- "[Cip Code].[By Two Digits].[Two Digit Level]"
+    `CIP Level 6` <- "[Cip Code].[By Six Digits].[Six Digit Level]"
+    `CIP Level 4` <- "[Cip Code].[By Four Digits].[Four Digit Level]"
+
+    `Level Of Study` <- "[Level Of Study].[Level Of Study].[Level Of Study]"
     `Credential Type` <- "[Credential Type].[Credential Type].[Credential Type]"
+    `Program Band` <- "[Program Band].[Program Band].[Program Band]"
+    `Program Length` <- "[Program Length].[Program Length].[Program Length]"
+    `Program Type` <- "[Program Type].[Program Type].[Program Type]"
+
+    `Program Name` <- "[Program Specialization].[By Program].[Program]"
+    `Program Specialization Name` <- "[Program Specialization].[By Program].[Specialization]"
+    `Program Code` <- "[Program Specialization].[Program Code].[Program Code]"
+    `Program Specialization Code` <- "[Program Specialization].[Specialization Code].[Specialization Code]"
     `Provider` <- "[Provider].[By Current Sector].[Provider]"
 
+    `STEM and BHASE` <- "[STEM And BHASE].[By STEM And BHASE].[STEM And BHASE]"
+    `STEM and BHASE Subgroups` <- "[STEM And BHASE].[By STEM And BHASE].[STEM And BHASE Subgroups]"
+    `STEM and BHASE Categories` <- "[STEM And BHASE].[By STEM And BHASE].[STEM And BHASE Categories]"
 
     #Setting connection to the cube.
     cnnstr <- paste0(
@@ -110,9 +127,6 @@ get_pfd <-
       MDX Compatibility=1;Safety Options=2;MDX Missing Member Mode=Error"
     )
 
-
-#'     Provider=MSOLAP.8;Persist Security Info=True;User ID=AZanidean;Initial Catalog=DCAR_PFD_DM_PROD;Data Source=https://PSData.ae.alberta.ca/DCaR.datapump/PFD;Location=https://PSData.ae.alberta.ca/DCaR.datapump/PFD;MDX Compatibility=1;Safety Options=2;MDX Missing Member Mode=Error;Update Isolation Level=2
-#'
     olapCnn <- OlapConnection(cnnstr)
     qry <- Query()
 
