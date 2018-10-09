@@ -7,7 +7,7 @@
 #'@export air_vars
 
 air_vars <- function(cube) {
-  errormessage = "Please supply a valid cube. Either \"ASI\" or \"LERS\" is acceptable."
+  errormessage = "Please supply a valid cube. Either \"ASI\", \"LERS\", or \"PFD\" is acceptable."
   if (missing(cube)) {
     message(errormessage)
   }
@@ -122,6 +122,38 @@ air_vars <- function(cube) {
     print(rows)
 
     ##################################################
+  } else if (cube == "PFD"){
+
+    message("PFD")
+    measures <- c("Cost per FLE", "Full Load Equivalent",
+                  "Direct Cost", "Indirect Cost", "Total Program Cost",
+                  "Record Count")
+
+    rows <- c(      "Program Name",
+                    "Program Name Code",
+                    "Credential Type",
+                    "Program Type",
+                    "Program Band",
+                    "Program Specialization",
+                    "Program Specialization Code",
+                    "CIP Level 2",
+                    "CIP Level 4",
+                    "CIP Level 6",
+                    "Level Of Study", "STEM and BHASE",
+                    "STEM and BHASE Subgroups",
+                    "STEM and BHASE Categories"
+
+    )
+
+
+    message("Measures")
+    print(measures)
+    message("Rows")
+    print(rows)
+
+
+
+
   } else {
     message(errormessage)
   }

@@ -105,7 +105,7 @@ get_pfd <-
 
     `Program Name` <- "[Program Specialization].[By Program].[Program]"
     `Program Specialization Name` <- "[Program Specialization].[By Program].[Specialization]"
-    `Program Code` <- "[Program Specialization].[Program Code].[Program Code]"
+    `Program Name Code` <- "[Program Specialization].[Program Code].[Program Code]"
     `Program Specialization Code` <- "[Program Specialization].[Specialization Code].[Specialization Code]"
     `Provider` <- "[Provider].[By Current Sector].[Provider]"
 
