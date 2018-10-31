@@ -4,7 +4,7 @@
 #'@param institutions Optional: Filters by Institution. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
 #'@param postalcodes Optional: Filters by Postal Code. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
 #'@param censusdivisions Optional: Filters by Census Division. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
-#'@param cipcodes Optional: Filters by Cip Code of any length, can used mixed vector with any length cip codes together.
+#'@param cipcodes Optional: Filters by Cip Code of any length, can used mixed vector with #'any length cip codes together. Can exclude by including "exclude" in the vector, then the items in that vector #'will be excluded rather than included.
 #'@param ages Optional: Filters by age group.
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
@@ -107,6 +107,8 @@ get_enrolment <-
     pcs_t <- grepl("exclude", postalcodes) %>% any()
     cds_t <- grepl("exclude", censusdivisions) %>% any()
     cips_t <- grepl("exclude", cipcodes) %>% any()
+    cipcodes <- cipcodes[cipcodes != "exclude"]
+
     providers_t <- grepl("exclude", institutions) %>% any()
     ages_t <- grepl("exclude", ages) %>% any()
 
@@ -384,6 +386,14 @@ get_enrolment <-
     ages <- excluder(ages,
                      ages_t,
                      "[Age Group].[By Age Group].[Age Group]")
+
+    print(cips)
+
+
+    cips <- excluder(cips,
+                     cips_t,
+                     "[CIP Level].[By Two Digits].[Two Digit Level]")
+
 
     slices <-
       c(
