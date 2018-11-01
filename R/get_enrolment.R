@@ -32,6 +32,12 @@ get_enrolment <-
            cipcodes,
            ages,
            sa.mh = F) {
+
+    require(olapR)
+    require(dplyr)
+    require(tidyr)
+    require(stringr)
+
     #defining a new login function
     getLoginDetails <- function() {
       require(tcltk)
@@ -363,8 +369,12 @@ get_enrolment <-
     cips <- ifelse(is.na(cips[1]), NA, paste0("{", cips, "}"))
     cips <- ifelse(cips == "{}", NA, cips)
 
+    cips2 <- paste0("{", cips2, "}")
+    cips4 <- paste0("{", cips4, "}")
+    cips6 <- paste0("{", cips6, "}")
+
     excluder <- function(input, test, place) {
-      if (test == T) {
+      if (test == T & !is.na(input)) {
         output <- gsub("},", "}", input)
         output <- paste0("EXCEPT(", place, ".MEMBERS, ", output, ")")
       } else
@@ -382,17 +392,19 @@ get_enrolment <-
     providers <- excluder(providers,
                           providers_t,
                           "[Provider Location].[By Provider].[Provider]")
-
     ages <- excluder(ages,
                      ages_t,
                      "[Age Group].[By Age Group].[Age Group]")
 
-    print(cips)
-
-
-    cips <- excluder(cips,
+    cips2 <- excluder(cips2,
                      cips_t,
                      "[CIP Level].[By Two Digits].[Two Digit Level]")
+    cips4 <- excluder(cips4,
+                      cips_t,
+                      "[CIP Level].[By Two Digits].[Four Digit Level]")
+    cips6 <- excluder(cips6,
+                      cips_t,
+                      "[CIP Level].[By Two Digits].[Six Digit Level]")
 
 
     slices <-
@@ -401,13 +413,23 @@ get_enrolment <-
         providers,
         pcs,
         cds,
-        cips,
+        cips2, cips4, cips6,
+        #cips,
         ages,
         rm_cs,
         rm_os,
         "[Submission Status].[Submission Status].&[1])"
       ) %>%
       na.omit()
+
+    exclude <- c("EXCEPT([CIP Level].[By Two Digits].[Two Digit Level].MEMBERS, {NA})",
+                 "EXCEPT([CIP Level].[By Two Digits].[Four Digit Level].MEMBERS, {NA})",
+                 "EXCEPT([CIP Level].[By Two Digits].[Six Digit Level].MEMBERS, {NA})",
+                 "{NA}")
+
+    slices <- slices[!(slices %in% exclude)]
+
+
     slicers(qry) <- slices
 
     #Print out MDX string used.
