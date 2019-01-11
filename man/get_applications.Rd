@@ -4,8 +4,8 @@
 \alias{get_applications}
 \title{Pull Tidy Data from ASI}
 \usage{
-get_applications(measures, rows, institutions, username, password, print = F,
-  postalcodes, censusdivisions, cipcodes, sa.mh = F)
+get_applications(measures, rows, institutions, username, password,
+  print = F, postalcodes, censusdivisions, cipcodes, sa.mh = F)
 }
 \arguments{
 \item{measures}{Select possible measurements}

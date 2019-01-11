@@ -4,9 +4,9 @@
 \alias{get_enrolment}
 \title{Pull Tidy Data from LERS}
 \usage{
-get_enrolment(measures, rows, institutions, username, password, print = F,
-  remove.offshores = T, remove.continuingstudies = T, postalcodes,
-  censusdivisions, cipcodes, ages, sa.mh = F)
+get_enrolment(measures, rows, institutions, username, password,
+  print = F, remove.offshores = T, remove.continuingstudies = T,
+  postalcodes, censusdivisions, cipcodes, ages, sa.mh = F)
 }
 \arguments{
 \item{measures}{Select possible measurements}
@@ -25,7 +25,7 @@ get_enrolment(measures, rows, institutions, username, password, print = F,
 
 \item{censusdivisions}{Optional: Filters by Census Division. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.}
 
-\item{cipcodes}{Optional: Filters by Cip Code of any length, can used mixed vector with #'any length cip codes together. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.}
+\item{cipcodes}{Optional: Filters by Cip Code of any length, can used mixed vector with #'any length cip codes together. Can exclude by including "exclude" in the vector, then the items in that vector #'will be excluded rather than included.}
 
 \item{ages}{Optional: Filters by age group.}
 }

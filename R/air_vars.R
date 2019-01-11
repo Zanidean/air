@@ -5,7 +5,6 @@
 #'air_vars("LERS")
 #'
 #'@export air_vars
-
 air_vars <- function(cube) {
   errormessage = "Please supply a valid cube. Either \"ASI\", \"LERS\", or \"PFD\" is acceptable."
   if (missing(cube)) {
