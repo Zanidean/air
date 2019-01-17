@@ -1,9 +1,6 @@
 #'Elements of DCARS that air packages can use.
 #'@param cube Return a list of possible measures and rows to query using AIR in that cube
-#'
-#'@examples
-#'air_vars("LERS")
-#'
+#'@examples air_vars("LERS")
 #'@export air_vars
 air_vars <- function(cube) {
   errormessage = "Please supply a valid cube. Either \"ASI\", \"LERS\", or \"PFD\" is acceptable."

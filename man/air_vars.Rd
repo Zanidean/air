@@ -14,5 +14,4 @@ Elements of DCARS that air packages can use.
 }
 \examples{
 air_vars("LERS")
-
 }

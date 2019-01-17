@@ -13,5 +13,5 @@ air_codes(arg = "institutions")
 Get filter codes to supply to filtering arguments
 }
 \examples{
-air_codes("institions")))
+air_codes("institions")
 }

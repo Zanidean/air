@@ -1,6 +1,6 @@
 #'Get filter codes to supply to filtering arguments
 #'@param code Which argument would you like to see filters for?
-#'@examples air_codes("institions")))
+#'@examples air_codes("institions")
 #'@export air_codes
 air_codes <- function(arg = "institutions") {
   if (arg == "institutions") {
