@@ -11,7 +11,8 @@ get_rate <- function(rate,
                      institutions,
                      sa.mh = F,
                      postalcodes = c(),
-                     censusdivisions = c()) {
+                     censusdivisions = c(),
+                     ages = c()) {
   #if(missing(institutions)){institutions <- c()}
   if (missing(rows)) {
     rows <- NULL
@@ -26,6 +27,10 @@ get_rate <- function(rate,
     censusdivisions <- NA
   }
 
+  if (missing(ages)) {
+    ages <- NA
+  }
+
   if (rate != "Capture Rate") {
     qualified <-
       get_applications(
@@ -34,7 +39,8 @@ get_rate <- function(rate,
         institutions = institutions,
         sa.mh = sa.mh,
         postalcodes = postalcodes,
-        censusdivisions = censusdivisions
+        censusdivisions = censusdivisions,
+        ages = ages
       ) %>%
       filter(Qualified == "Qualified") %>%
       group_by_(.dots = c(lapply(c(
@@ -54,7 +60,8 @@ get_rate <- function(rate,
         institutions = institutions,
         sa.mh = sa.mh,
         postalcodes = postalcodes,
-        censusdivisions = censusdivisions
+        censusdivisions = censusdivisions,
+        ages = ages
       ) %>%
       filter(Qualified == "Qualified", Offered == "Offered") %>%
       group_by_(.dots = c(lapply(c(
@@ -74,7 +81,8 @@ get_rate <- function(rate,
         institutions = institutions,
         sa.mh = sa.mh,
         postalcodes = postalcodes,
-        censusdivisions = censusdivisions
+        censusdivisions = censusdivisions,
+        ages = ages
       ) %>%
       filter(Qualified == "Qualified",
              Offered == "Offered",
