@@ -5,7 +5,7 @@
 \title{Pull Tidy Data from ASI}
 \usage{
 get_applications(measures, rows, institutions, username, password,
-  print = F, postalcodes, censusdivisions, cipcodes, sa.mh = F)
+  print = F, postalcodes, censusdivisions, cipcodes, ages, sa.mh = F)
 }
 \arguments{
 \item{measures}{Select possible measurements}
@@ -25,6 +25,8 @@ get_applications(measures, rows, institutions, username, password,
 \item{censusdivisions}{Optional: Filters by Census Division. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.}
 
 \item{cipcodes}{Optional: Filters by Cip Code of any length, can used mixed vector with any length cip codes together.}
+
+\item{ages}{Optional: Filters by age group.}
 }
 \description{
 Pull Tidy Data from ASI

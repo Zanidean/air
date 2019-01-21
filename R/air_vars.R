@@ -1,13 +1,11 @@
 #'Elements of DCARS that air packages can use.
 #'@param cube Return a list of possible measures and rows to query using AIR in that cube
-#'@examples air_vars("LERS")
-#'@export air_vars
-air_vars <- function(cube) {
+#'@export get_enrolment
+air_vars <- function(cube){
   errormessage = "Please supply a valid cube. Either \"ASI\", \"LERS\", or \"PFD\" is acceptable."
   if (missing(cube)) {
     message(errormessage)
   }
-  ##################################################
   if (cube == "LERS") {
     message("LERS")
     measures <-
@@ -70,7 +68,6 @@ air_vars <- function(cube) {
     message("Rows")
     print(rows)
 
-    ##################################################
   } else if (cube == "ASI") {
     message("ASI")
     measures <- c("Application Record Count",
@@ -117,7 +114,6 @@ air_vars <- function(cube) {
     message("Rows")
     print(rows)
 
-    ##################################################
   } else if (cube == "PFD"){
 
     message("PFD")

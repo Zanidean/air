@@ -12,6 +12,3 @@ air_vars(cube)
 \description{
 Elements of DCARS that air packages can use.
 }
-\examples{
-air_vars("LERS")
-}

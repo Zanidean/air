@@ -5,7 +5,7 @@
 \title{Calculate Rates from DCARS data}
 \usage{
 get_rate(rate, rows, institutions, sa.mh = F, postalcodes = c(),
-  censusdivisions = c())
+  censusdivisions = c(), ages = c())
 }
 \arguments{
 \item{rate}{Either Conversion, Acceptance, or Capture Rates}
@@ -13,6 +13,14 @@ get_rate(rate, rows, institutions, sa.mh = F, postalcodes = c(),
 \item{rows}{Select rows to cut data by. Defaults to "Provider"}
 
 \item{institutions}{Optional: Filters by Institution}
+
+\item{postalcodes}{Optional: Filters by Postal Code. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.}
+
+\item{censusdivisions}{Optional: Filters by Census Division. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.}
+
+\item{ages}{Optional: Filters by age group.}
+
+\item{cipcodes}{Optional: Filters by Cip Code of any length, can used mixed vector with any length cip codes together.}
 
 \item{username}{Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".}
 

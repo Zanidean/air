@@ -2,6 +2,10 @@
 #'@param rows Select rows to cut data by. Defaults to "Provider"
 #'@param rate Either Conversion, Acceptance, or Capture Rates
 #'@param institutions Optional: Filters by Institution
+#'@param postalcodes Optional: Filters by Postal Code. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
+#'@param censusdivisions Optional: Filters by Census Division. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
+#'@param cipcodes Optional: Filters by Cip Code of any length, can used mixed vector with any length cip codes together.
+#'@param ages Optional: Filters by age group.
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username".
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password".
 #'@export get_rate
