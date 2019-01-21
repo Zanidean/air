@@ -5,6 +5,7 @@
 #'@param postalcodes Optional: Filters by Postal Code. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
 #'@param censusdivisions Optional: Filters by Census Division. Can exclude by including "exclude" in the vector, then the items in that vector will be excluded rather than included.
 #'@param cipcodes Optional: Filters by Cip Code of any length, can used mixed vector with any length cip codes together.
+#'@param ages Optional: Filters by age group.
 #'@param username Optional: Either supply a siams username or use .Rprofile otherwise as "siams.username"
 #'@param password Optional: Either supply a siams password or use .Rprofile otherwise as "siams.password"
 #'@param print Optional: Prints the MDX string used to query the database
@@ -17,7 +18,7 @@
 
 get_applications <- function(measures, rows,
                              institutions, username, password, print = F,
-                             postalcodes, censusdivisions, cipcodes,
+                             postalcodes, censusdivisions, cipcodes, ages,
                              sa.mh = F){
   #defining a new login function
   getLoginDetails <- function(){
@@ -72,11 +73,14 @@ get_applications <- function(measures, rows,
   if (missing(sa.mh)){
     sa.mh <- FALSE
     }
-
+  if (missing(ages)){
+    ages <- NA
+  }
   pcs_t <- grepl("exclude", postalcodes) %>% any()
   cds_t <- grepl("exclude", censusdivisions) %>% any()
   cips_t <- grepl("exclude", cipcodes) %>% any()
   providers_t <- grepl("exclude", institutions) %>% any()
+  ages_t <- grepl("exclude", ages) %>% any()
 
   if (sa.mh == T){
     postalcodes <- c("T1A", "T1B", "T1C", "T1R", "T0J", "T0K")
@@ -199,6 +203,15 @@ get_applications <- function(measures, rows,
   cds <- fltr(censusdivisions, "[Census Divsion].[By Census Division].[Census Division].&[0")
   #filter for cipcodes
 
+
+  #Giving a filter option for age group
+  ages <-
+    fltr(
+      ages,
+      "[Age Group].[By Applicant Age Group].[Applicant Age Group].&["
+    )
+
+
   filtercips <- function(sub, place){
     if (length(sub) > 0){
       output <- c()
@@ -244,9 +257,11 @@ get_applications <- function(measures, rows,
   pcs <- excluder(pcs, pcs_t, "[Service Area].[By Service Area].[Postal Code]")
   cds <- excluder(cds, cds_t, "[Census Division].[By Census Division].[Census Division]")
   providers <- excluder(providers, providers_t, "[Provider].[By Current Sector].[Provider]")
-
+  ages <- excluder(ages,
+                   ages_t,
+                   "[Age Group].[By Applicant Age Group].[Applicant Age Group]")
   #applying filters
-  slices <- paste0("(", providers, pcs, cds, cips,
+  slices <- paste0("(", providers, pcs, cds, ages, cips,
                    "[Submission Status].[Submission Status].&[1])")
   slices <- gsub("NA", "", slices)
 
