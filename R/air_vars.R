@@ -132,8 +132,8 @@ air_vars <- function(cube){
                     "CIP Level 4",
                     "CIP Level 6",
                     "Level Of Study",
-#'                     "STEM and BHASE Subgroups",
-#'                     "STEM and BHASE Categories",
+#                     "STEM and BHASE Subgroups",
+#                     "STEM and BHASE Categories",
                     "STEM and BHASE"
 
     )
