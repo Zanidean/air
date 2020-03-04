@@ -9,10 +9,10 @@
 #'@param print Optional: Prints the MDX string used to query the database.
 #'
 #'@examples
-#' df <- ler_search("FLE by Gender", sa.mh = T, ages = 2)
-#'@export lers_search
+#' df <- asi_search("FLE by Gender", sa.mh = T, ages = 2)
+#'@export asi_search
 
-lers_search <- function(search_string, ...) {
+asi_search <- function(search_string, ...) {
 
   df = tibble(Measure = search_string) %>%
     separate(
@@ -31,8 +31,8 @@ lers_search <- function(search_string, ...) {
     r <-  r %>%
       str_split(" and ", simplify = T) %>%
       as.character()
-    }
+  }
 
 
-  get_enrolment(m, r, ...)
+  get_applications(m, r, ...)
 }
