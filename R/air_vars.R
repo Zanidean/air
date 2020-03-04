@@ -1,6 +1,6 @@
 #'Elements of DCARS that air packages can use.
 #'@param cube Return a list of possible measures and rows to query using AIR in that cube
-#'@export get_enrolment
+#'@export air_vars
 air_vars <- function(cube){
   errormessage = "Please supply a valid cube. Either \"ASI\", \"LERS\", or \"PFD\" is acceptable."
   if (missing(cube)) {
@@ -87,6 +87,7 @@ air_vars <- function(cube){
       "Level Of Study",
       "Current Status",
       "Registration Status",
+      "Legal Status",
       #provider
       "Provider",
       "Provider Sector",

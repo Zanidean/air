@@ -114,6 +114,8 @@ get_applications <- function(measures, rows,
   `Current Status` <- "[Current Status].[Current Status].[Current Status]"
   `Registration Status` <- "[Registration Status].[By Registration Status].[Registration Status]"
 
+  `Legal Status` <- "[Legal Status].[By Legal Status].[Legal Status]"
+
   ###Provider
   Provider <- "[Provider].[Provider].[Provider]"
   `Provider Sector` <- "[Provider].[By Current Sector].[Current Sector]"
