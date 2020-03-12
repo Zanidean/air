@@ -148,6 +148,31 @@ air_vars <- function(cube){
 
 
 
+  } else if (cube == "FIRS"){
+
+    message("FIRS")
+    measures <- c("Value", "Record Count")
+
+    rows <- c("Template",
+              "Provider",
+              "Sector",
+              "Previous Sector",
+              "Category A Level 2"
+              "Category A Level 3",
+              "Category B Level 2",
+              "Category B Level 3",
+              "Category B Level 4"
+    )
+
+
+    message("Measures")
+    print(measures)
+    message("Rows")
+    print(rows)
+
+
+
+
   } else {
     message(errormessage)
   }
