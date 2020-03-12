@@ -157,7 +157,7 @@ air_vars <- function(cube){
               "Provider",
               "Sector",
               "Previous Sector",
-              "Category A Level 2"
+              "Category A Level 2",
               "Category A Level 3",
               "Category B Level 2",
               "Category B Level 3",
