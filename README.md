@@ -9,6 +9,8 @@ air is a package for pulling tidy data frames from LERS and ASI
 
 `get_pfd()`: Pulls data from the PFD live cube
 
+`get_firs()`: Pulls data from the FIRS live cube
+
 `get_dcars()`: Uses both functions to create a dataframe of both enrollments and applicants
 
 `get_rate()`: Uses ASI cube to automatically calculate the conversion or acceptance rates
