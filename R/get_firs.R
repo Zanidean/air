@@ -24,7 +24,7 @@ get_firs <- function(measures = "Value",
     require(tidyr)
     require(stringr)
 
-    #defining a new login function
+    #defining a new login functionrox
     getLoginDetails <- function() {
       require(tcltk)
       message("Please use pop-up to authorize.")
@@ -193,21 +193,6 @@ get_firs <- function(measures = "Value",
       message("Whoops! Something went wrong...")
     }
     else {
-#'       df <- df %>%
-#'         as.data.frame()
-#'       df$measure <- row.names(df)
-#'       df <- ftable(df) %>%
-#'         as_tibble() %>%
-#'         mutate_at(1, as.character) %>%
-#'         mutate_if(is.factor, as.character) %>%
-#'         drop_na %>%
-#'         spread(1, `Freq`)
-#'       names(df)[1:(length(rows) + 1)] <- c("Fiscal Year", rows)
-#'       df %>%
-#'         mutate(`Fiscal Year` = `Fiscal Year` %>%
-#'                  str_replace(" - 20", "-") %>%
-#'                  str_replace("-20", "-"))
-
       df <- ftable(df) %>%
         as.data.frame() %>%
         as_tibble() %>%
@@ -218,23 +203,8 @@ get_firs <- function(measures = "Value",
       names(df)[1:(length(rows) + 1)] <- c("Fiscal Year", rows)
       df = df %>%
         mutate(`Fiscal Year` = `Fiscal Year` %>%
-                 str_replace(" - 20", "-") %>%
-                 str_replace("-20", "-"))
-
+                 str_replace("\\-20", "-") %>%
+                 str_replace(" \\- 20", "-"))
     }
     return(df)
-
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
