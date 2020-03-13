@@ -216,7 +216,7 @@ get_firs <- function(measures = "Value",
         drop_na %>%
         spread(1, `Freq`)
       names(df)[1:(length(rows) + 1)] <- c("Fiscal Year", rows)
-      df %>%
+      df = df %>%
         mutate(`Fiscal Year` = `Fiscal Year` %>%
                  str_replace(" - 20", "-") %>%
                  str_replace("-20", "-"))
