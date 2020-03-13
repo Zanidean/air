@@ -12,8 +12,7 @@
 #'                institions = "Medicine Hat College")
 #'@export get_firs
 
-get_firs <-
-  function(measures = "Value",
+get_firs <- function(measures = "Value",
            rows,
            institutions,
            username,
@@ -113,8 +112,10 @@ get_firs <-
       Initial Catalog=DCAR_FIRS_DM_PROD;
       Data Source=https://PSData.ae.alberta.ca/DCaR.datapump/FIRS;
       Location=https://PSData.ae.alberta.ca/DCaR.datapump/FIRS;
-      MDX Compatibility=1;Safety Options=2;MDX Missing Member Mode=Error"
-    )
+      MDX Compatibility=1;
+      Safety Options=2;
+      MDX Missing Member Mode=Error;
+      Update Isolation Level=2")
 
     olapCnn <- OlapConnection(cnnstr)
     qry <- Query()
@@ -138,12 +139,11 @@ get_firs <-
     ##I've opted to build it so measures and years are always present
     cube(qry) <- "[DCAR FIRS Live Cube]"
     axis(qry, 1) <- c(measures2)
-    axis(qry, 2) <-
-      c("NONEMPTY([Fiscal Year].[Fiscal Year].[Fiscal Year].MEMBERS)")
+    axis(qry, 2) <-  c("NONEMPTY([Fiscal Year].[Fiscal Year].[Fiscal Year].MEMBERS)")
 
     ##Building the axes
     for (i in seq_along(rows2)) {
-      axis(qry, i + 2) <- paste0("NONEMPTY(", rows2[i], ".MEMBERS)")
+      axis(qry, i + 2) <- paste0(rows2[i])
     }
 
     # filter data
@@ -193,33 +193,34 @@ get_firs <-
       message("Whoops! Something went wrong...")
     }
     else {
-      df <- df %>%
-        as.data.frame()
-      df$measure <- row.names(df)
-      df <- reshape2::melt(df, id.vars = "measure") %>%
+#'       df <- df %>%
+#'         as.data.frame()
+#'       df$measure <- row.names(df)
+#'       df <- ftable(df) %>%
+#'         as_tibble() %>%
+#'         mutate_at(1, as.character) %>%
+#'         mutate_if(is.factor, as.character) %>%
+#'         drop_na %>%
+#'         spread(1, `Freq`)
+#'       names(df)[1:(length(rows) + 1)] <- c("Fiscal Year", rows)
+#'       df %>%
+#'         mutate(`Fiscal Year` = `Fiscal Year` %>%
+#'                  str_replace(" - 20", "-") %>%
+#'                  str_replace("-20", "-"))
+
+      df <- ftable(df) %>%
+        as.data.frame() %>%
         as_tibble() %>%
-        mutate(., variable = gsub("St. Mary's", "StMary's", variable)) %>%
-        group_by(measure, variable) %>%
-        summarise(value = sum(value, na.rm = T)) %>%
-        filter(value > 0) %>%
-        spread(measure, value) %>%
-        mutate(variable = variable %>% str_replace("Non.Academic Support", "Non-Academic Support")) %>%
-        mutate(variable = variable %>% str_replace("Cond. Grants", "Cond. Grants")) %>%
-        mutate(variable = variable %>% str_replace("Non.Refundable", "Non-Refundable ")) %>%
-        mutate(variable = variable %>% str_replace("MFP Exp. Not Subj", "MFP Exp Not Subj")) %>%
-        mutate(variable = variable %>% str_replace("Misc. Fees", "Misc Fees")) %>%
-        mutate(
-          variable = str_replace(
-            variable,
-            "(\\.[0-9][0-9]\\.)",
-            str_extract(variable, "(\\.[0-9][0-9])")
-          ) %>%
-            str_replace("\\.\\,", "\\,") %>%
-            str_replace("\\.\\,", "\\,")
-        ) %>%
-        separate(., variable, rows_list[0:length(rows) + 1], sep = "\\.") %>%
-        mutate(`Fiscal Year` = `Fiscal Year` %>% str_replace("-20", "-"))%>%
-        mutate(`Fiscal Year` = `Fiscal Year` %>% str_replace(" - 20", "-"))
+        mutate_at(1, as.character) %>%
+        mutate_if(is.factor, as.character) %>%
+        drop_na %>%
+        spread(1, `Freq`)
+      names(df)[1:(length(rows) + 1)] <- c("Fiscal Year", rows)
+      df %>%
+        mutate(`Fiscal Year` = `Fiscal Year` %>%
+                 str_replace(" - 20", "-") %>%
+                 str_replace("-20", "-"))
+
     }
     return(df)
 
