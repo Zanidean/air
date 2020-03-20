@@ -121,6 +121,8 @@ get_firs <- function(measures = "Value",
     qry <- Query()
 
     #Getting objects
+    rows = c("Template", rows)
+
     rows2 <- c()
     for (i in seq_along(rows)) {
       rows2[i] <- get(objects(pattern = rows[i]))
@@ -128,10 +130,6 @@ get_firs <- function(measures = "Value",
     measures2 <- c()
     for (i in seq_along(measures)) {
       measures2[i] <- get(objects(pattern = measures[i]))
-    }
-    rows_list <- c("Fiscal Year")
-    for (i in seq_along(rows)) {
-      rows_list <- c(rows_list, rows[i])
     }
 
 
